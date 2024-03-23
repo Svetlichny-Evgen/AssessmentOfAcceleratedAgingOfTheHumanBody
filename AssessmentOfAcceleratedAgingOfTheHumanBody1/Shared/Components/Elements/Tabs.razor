@@ -1,0 +1,71 @@
+﻿@using System.Collections.Generic
+
+@if (currentTab < tabs.Count)
+{
+    <div>
+        @switch (currentTab)
+        {
+            case 1:
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Habitasse platea dictumst vestibulum rhoncus est pellentesque. Eu scelerisque felis imperdiet proin fermentum leo. Enim neque volutpat ac tincidunt. Arcu felis bibendum ut tristique et egestas quis ipsum suspendisse. Ornare arcu dui vivamus arcu. Pretium viverra suspendisse potenti nullam ac tortor vitae purus. Egestas purus viverra accumsan in nisl nisi. Mattis nunc sed blandit libero volutpat sed cras ornare arcu. Pellentesque habitant morbi tristique senectus et. Congue nisi vitae suscipit tellus. Senectus et netus et malesuada fames ac turpis. Blandit volutpat maecenas volutpat blandit aliquam etiam erat velit scelerisque. Iaculis eu non diam phasellus vestibulum lorem sed.
+                </p>
+                <p>
+                    Ridiculus mus mauris vitae ultricies. Cursus turpis massa tincidunt dui ut. Est velit egestas dui id ornare. A lacus vestibulum sed arcu non odio euismod lacinia. Tristique magna sit amet purus gravida. Tellus cras adipiscing enim eu. Quam nulla porttitor massa id neque aliquam vestibulum. Arcu cursus euismod quis viverra nibh. Arcu bibendum at varius vel pharetra vel turpis. Malesuada nunc vel risus commodo viverra maecenas accumsan. Platea dictumst vestibulum rhoncus est pellentesque elit ullamcorper. Ornare massa eget egestas purus viverra accumsan in nisl. Elementum integer enim neque volutpat ac tincidunt. Lectus nulla at volutpat diam ut. Amet nisl purus in mollis nunc sed id semper risus.
+                </p>
+                <p>
+                    Non tellus orci ac auctor augue mauris augue neque. Tellus mauris a diam maecenas sed enim. In eu mi bibendum neque egestas congue. Consequat id porta nibh venenatis cras sed felis eget. Lorem donec massa sapien faucibus et molestie. Fames ac turpis egestas integer eget aliquet. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Massa enim nec dui nunc. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Ante in nibh mauris cursus mattis molestie a. Vel risus commodo viverra maecenas accumsan. In ante metus dictum at tempor commodo ullamcorper a. Neque gravida in fermentum et sollicitudin ac orci.
+                </p>
+                <p>Mi eget mauris pharetra et. At volutpat diam ut venenatis tellus in metus vulputate eu. Purus viverra accumsan in nisl nisi scelerisque eu ultrices. Aliquet lectus proin nibh nisl condimentum id venenatis a. Tortor aliquam nulla facilisi cras. Consectetur adipiscing elit duis tristique. Volutpat odio facilisis mauris sit. Tempor id eu nisl nunc mi ipsum. Risus sed vulputate odio ut enim blandit volutpat maecenas volutpat. Aliquet risus feugiat in ante. Massa tincidunt nunc pulvinar sapien et ligula. Eu non diam phasellus vestibulum lorem sed risus ultricies. Fermentum dui faucibus in ornare quam viverra orci. Cursus turpis massa tincidunt dui. Lectus arcu bibendum at varius vel pharetra vel turpis. Ullamcorper sit amet risus nullam. Augue lacus viverra vitae congue. Ligula ullamcorper malesuada proin libero. Pellentesque habitant morbi tristique senectus et netus et malesuada.
+                </p>
+                <p>
+                    Nunc mi ipsum faucibus vitae. Ipsum dolor sit amet consectetur adipiscing elit. Diam donec adipiscing tristique risus nec. Phasellus faucibus scelerisque eleifend donec pretium vulputate sapien nec. Eu turpis egestas pretium aenean. In mollis nunc sed id semper risus in. Pretium nibh ipsum consequat nisl vel pretium. At erat pellentesque adipiscing commodo elit at. Facilisis mauris sit amet massa vitae. Suscipit tellus mauris a diam maecenas. A lacus vestibulum sed arcu.
+                </p>
+                break;
+            case 2:
+                <div>
+                    <ShortQuestionForm></ShortQuestionForm>
+                </div>
+                break;
+            case 3:
+                <div>
+                    <QualityOfLifeAssessmentScaleForm></QualityOfLifeAssessmentScaleForm>
+                </div>
+                break;
+            case 4:
+                <p>
+                    Nunc mi ipsum faucibus vitae. Ipsum dolor sit amet consectetur adipiscing elit. Diam donec adipiscing tristique risus nec. Phasellus faucibus scelerisque eleifend donec pretium vulputate sapien nec. Eu turpis egestas pretium aenean. In mollis nunc sed id semper risus in. Pretium nibh ipsum consequat nisl vel pretium. At erat pellentesque adipiscing commodo elit at. Facilisis mauris sit amet massa vitae. Suscipit tellus mauris a diam maecenas. A lacus vestibulum sed arcu.
+                </p>
+                break;
+            case 5:
+                <p>
+                    Mi eget mauris pharetra et. At volutpat diam ut venenatis tellus in metus vulputate eu. Purus viverra accumsan in nisl nisi scelerisque eu ultrices. Aliquet lectus proin nibh nisl condimentum id venenatis a. Tortor aliquam nulla facilisi cras. Consectetur adipiscing elit duis tristique. Volutpat odio facilisis mauris sit. Tempor id eu nisl nunc mi ipsum. Risus sed vulputate odio ut enim blandit volutpat maecenas volutpat. Aliquet risus feugiat in ante. Massa tincidunt nunc pulvinar sapien et ligula. Eu non diam phasellus vestibulum lorem sed risus ultricies. Fermentum dui faucibus in ornare quam viverra orci. Cursus turpis massa tincidunt dui. Lectus arcu bibendum at varius vel pharetra vel turpis. Ullamcorper sit amet risus nullam. Augue lacus viverra vitae congue. Ligula ullamcorper malesuada proin libero. Pellentesque habitant morbi tristique senectus et netus et malesuada.
+                </p>
+                break;
+            default:
+                <p>Это вкладка номер @currentTab</p>
+                break;
+        }
+        <button @onclick="NextTab">Next</button>
+    </div>
+}
+else
+{
+    <div>
+        <h3>End</h3>
+        <button @onclick="Finish">Finish</button>
+    </div>
+}
+
+@code {
+    private int currentTab = 1;
+    private List<int> tabs = new List<int> { 1, 2, 3, 4, 5, 6 }; // Number of tabs
+
+    private void NextTab()
+    {
+        currentTab++;
+    }
+
+    private void Finish()
+    {
+        // Perform action when "Finish" button is clicked
+    }
+}

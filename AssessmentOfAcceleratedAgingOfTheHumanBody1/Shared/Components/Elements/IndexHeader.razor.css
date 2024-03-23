@@ -1,0 +1,19 @@
+.header-area {
+  height: 72px;
+  width: 100%;
+  background: #369732;
+  display: flex;
+  justify-content: center;
+}
+.header-area .header {
+  display: flex;
+  /*background: #369732;*/
+}
+.header-area .header-item {
+  margin: auto;
+  margin-left: 0;
+  margin-right: 16px;
+  display: flex;
+}
+
+/*# sourceMappingURL=IndexHeader.razor.css.map */

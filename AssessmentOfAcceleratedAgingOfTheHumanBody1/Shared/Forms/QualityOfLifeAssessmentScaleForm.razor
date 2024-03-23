@@ -1,0 +1,198 @@
+﻿<div class="questions">
+    @foreach (var question in Questions)
+    {
+        <QuestionComponent TValue="string" QuestionId="@question.Id" QuestionText="@question.Text" Options="@question.Options" SelectedOption="@question.SelectedOption" SelectedOptionChanged="@((string value) => HandleSelectedOptionChanged(question, value))" />
+        <br />
+    }
+    <button @onclick="SubmitSurvey">Отправить</button>
+    <p>Количество ответов баллов: @totalScore</p>
+    <p>Рівень якості життя: @result</p>
+</div>
+
+@code {
+    int totalScore = 0;
+    string result = "";
+    private List<QuestionModel> Questions = new List<QuestionModel>
+    {
+        new QuestionModel {
+            Id = "question1",
+            Text = "1. Оцінка свого здоров'я",
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "bad", Text = "Немає здоров'я" },
+            new OptionsModel { Value = "normal", Text = "Погане здоров'я" },
+            new OptionsModel { Value = "good", Text = "Хороше здоров'я" },
+            new OptionsModel { Value = "best", Text = "Прекрасне здоров'я" }
+        },
+            SelectedOption = ""
+        },
+        new QuestionModel {
+            Id = "question2",
+            Text = "2. Реалізація",
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "bad", Text = "Не реалізований" },
+            new OptionsModel { Value = "normal", Text = "Частково реалізований" },
+            new OptionsModel { Value = "good", Text = "В основному реалізований" },
+            new OptionsModel { Value = "best", Text = "Реалізований більше, ніж очікував" }
+        },
+            SelectedOption = ""
+        },
+        new QuestionModel {
+            Id = "question3",
+            Text = "3. Любов",
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "bad", Text = "Ніхто не любив і не любить" },
+            new OptionsModel { Value = "normal", Text = "Любили в минулому" },
+            new OptionsModel { Value = "good", Text = "Люблять лише близькі люди" },
+            new OptionsModel { Value = "best", Text = "Люблять рідні, близькі та інші люди" }
+        },
+            SelectedOption = ""
+        },
+        new QuestionModel {
+            Id = "question4",
+            Text = "4. Гедонія (задоволення)",
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "bad", Text = "Відутність радості в житті" },
+            new OptionsModel { Value = "normal", Text = "Іноді щось приносить задоволення" },
+            new OptionsModel { Value = "good", Text = "Отримую задоволення від життя" },
+            new OptionsModel { Value = "best", Text = "Постійно задоволений життям" }
+        },
+            SelectedOption = ""
+        },
+        new QuestionModel {
+            Id = "question5",
+            Text = "5. Друзі",
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "bad", Text = "Не було й нема" },
+            new OptionsModel { Value = "normal", Text = "Були, тепер – нема" },
+            new OptionsModel { Value = "good", Text = "Є, але зустрічаємося рідко" },
+            new OptionsModel { Value = "best", Text = "Є, зустрічаємося часто" }
+        },
+            SelectedOption = ""
+        },
+        new QuestionModel {
+            Id = "question6",
+            Text = "6. Соціальна активність",
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "bad", Text = "Повна відсутність активності" },
+            new OptionsModel { Value = "normal", Text = "Незначна активність" },
+            new OptionsModel { Value = "good", Text = "Активний, але не постійно" },
+            new OptionsModel { Value = "best", Text = "Активний, постійно" }
+        },
+            SelectedOption = ""
+        },
+        new QuestionModel {
+            Id = "question7",
+            Text = "7. Фінансове благополуччя",
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "bad", Text = "Значні проблеми" },
+            new OptionsModel { Value = "normal", Text = "Недостатнє" },
+            new OptionsModel { Value = "good", Text = "Задовільне, проте частково" },
+            new OptionsModel { Value = "best", Text = "Повністю задоволений" }
+        },
+            SelectedOption = ""
+        },
+        new QuestionModel {
+            Id = "question8",
+            Text = "8. Спільне проведення часу з сім'єю та друзями",
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "bad", Text = "Відсутнє" },
+            new OptionsModel { Value = "normal", Text = "Іноді" },
+            new OptionsModel { Value = "good", Text = "Досить часто" },
+            new OptionsModel { Value = "best", Text = "Дуже часто" }
+        },
+            SelectedOption = ""
+        },
+        new QuestionModel {
+            Id = "question9",
+            Text = "9. Задоволеність роботою",
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "bad", Text = "Не задоволений" },
+            new OptionsModel { Value = "normal", Text = "Частково задоволений" },
+            new OptionsModel { Value = "good", Text = "Задоволений" },
+            new OptionsModel { Value = "best", Text = "Дуже задоволений" }
+        },
+            SelectedOption = ""
+        },
+        new QuestionModel {
+            Id = "question10",
+            Text = "10. Соціальний статус",
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "bad", Text = "Не задоволений" },
+            new OptionsModel { Value = "normal", Text = "Частково задоволений" },
+            new OptionsModel { Value = "good", Text = "Задоволений" },
+            new OptionsModel { Value = "best", Text = "Дуже задоволений" }
+        },
+            SelectedOption = ""
+        }
+    };
+
+    private int CalculateTotalScore(List<QuestionModel> questions)
+    {
+        int score = 0;
+        foreach (var question in questions)
+        {
+            if (!string.IsNullOrEmpty(question.SelectedOption))
+            {
+                switch (question.SelectedOption)
+                {
+                    case "bad":
+                        score += 0;
+                        break;
+                    case "normal":
+                        score += 1;
+                        break;
+                    case "good":
+                        score += 2;
+                        break;
+                    case "best":
+                        score += 3;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        return score;
+    }
+
+    private async Task HandleSelectedOptionChanged(QuestionModel question, string selectedOption)
+    {
+        question.SelectedOption = selectedOption;
+        totalScore = CalculateTotalScore(Questions);
+    }
+
+    private async Task SubmitSurvey()
+    {
+        totalScore = CalculateTotalScore(Questions);
+        if (totalScore == 0 || totalScore <= 6)
+        {
+            result = "Дуже низький";
+        }
+        else if (totalScore >= 7 && totalScore <= 12)
+        {
+            result = "Низький";
+        }
+        else if (totalScore >= 13 && totalScore <= 18)
+        {
+            result = "Середній";
+        }
+        else if (totalScore >= 19 && totalScore <= 24)
+        {
+            result = "Високий";
+        }
+        else if (totalScore >= 25 && totalScore <= 39)
+        {
+            result = "Дуже високий";
+        }
+    }
+}

@@ -1,0 +1,31 @@
+﻿@typeparam TValue
+
+<div class="form-group">
+    <label for="@QuestionId">@QuestionText</label><br />
+    @foreach (var option in Options)
+    {
+        <input type="radio" id="@option.Value" name="@QuestionId" value="@option.Value" checked="@(_selectedOption == option.Value)" @onchange="() => OptionSelected(option.Value)" />
+        <label for="@option.Value">@option.Text</label>
+
+        <br />
+    }
+</div>
+
+@code {
+    [Parameter] public string QuestionId { get; set; }
+    [Parameter] public string QuestionText { get; set; }
+    [Parameter] public List<OptionsModel> Options { get; set; }
+    [Parameter] public TValue SelectedOption { get; set; }
+    [Parameter] public EventCallback<TValue> SelectedOptionChanged { get; set; }
+
+    private string _selectedOption;
+
+    private async Task OptionSelected(string value)
+    {
+        if (_selectedOption != value)
+        {
+            _selectedOption = value;
+            await SelectedOptionChanged.InvokeAsync((TValue)Convert.ChangeType(value, typeof(TValue)));
+        }
+    }
+}

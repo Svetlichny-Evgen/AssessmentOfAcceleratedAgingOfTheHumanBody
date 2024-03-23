@@ -1,0 +1,135 @@
+﻿<div class="questions">
+    @foreach (var question in Questions)
+    {
+        <QuestionComponent TValue="string" QuestionId="@question.Id" QuestionText="@question.Text" Options="@question.Options" SelectedOption="@question.SelectedOption" SelectedOptionChanged="@((string value) => HandleSelectedOptionChanged(question, value))" />
+        <br />
+    }
+    <button @onclick="SubmitSurvey">Отправить</button>
+
+    <p>Количество ответов "Да": @yesCount</p>
+</div>
+
+@code {
+    private List<QuestionModel> Questions = new List<QuestionModel>
+    {
+        new QuestionModel { 
+            Id = "question1", 
+            Text = "1. Нездатність розслабитися (напруженість)", 
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "yes", Text = "Так" },
+            new OptionsModel { Value = "no", Text = "Ні" }
+        },
+            SelectedOption = "" 
+        },
+        new QuestionModel { 
+            Id = "question2", 
+            Text = "2. Роздратування і поганий настрій.", 
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "yes", Text = "Так" },
+            new OptionsModel { Value = "no", Text = "Ні" }
+        },
+            SelectedOption = "" 
+        },
+        new QuestionModel { 
+            Id = "question3", 
+            Text = "3. Вторгнення у свідомість неприємних образів або спогадів про інцидент.", 
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "yes", Text = "Так" },
+            new OptionsModel { Value = "no", Text = "Ні" }
+        },
+            SelectedOption = "" 
+        },
+        new QuestionModel { 
+            Id = "question4", 
+            Text = "4. Неуважність, погане зосередження уваги.", 
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "yes", Text = "Так" },
+            new OptionsModel { Value = "no", Text = "Ні" }
+        },
+            SelectedOption = "" 
+        },
+        new QuestionModel { 
+            Id = "question5", 
+            Text = "5. Сильний смуток, печаль.", 
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "yes", Text = "Так" },
+            new OptionsModel { Value = "no", Text = "Ні" }
+        },
+            SelectedOption = "" 
+        },
+        new QuestionModel { 
+            Id = "question6", 
+            Text = "6. Сильна втома, недостатність енергії.", 
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "yes", Text = "Так" },
+            new OptionsModel { Value = "no", Text = "Ні" }
+        },
+            SelectedOption = "" 
+        },
+        new QuestionModel { 
+            Id = "question7", 
+            Text = "7. Потрясіння або паніка.", 
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "yes", Text = "Так" },
+            new OptionsModel { Value = "no", Text = "Ні" }
+        },
+            SelectedOption = "" 
+        },
+        new QuestionModel { 
+            Id = "question8", 
+            Text = "8. Прагнення уникати всього, що нагадує про інцидент або травмуючу подію.", 
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "yes", Text = "Так" },
+            new OptionsModel { Value = "no", Text = "Ні" }
+        },
+            SelectedOption = "" 
+        },
+        new QuestionModel { 
+            Id = "question9", 
+            Text = "9. Труднощі засинання, погіршення сну.", 
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "yes", Text = "Так" },
+            new OptionsModel { Value = "no", Text = "Ні" }
+        },
+            SelectedOption = "" 
+        },
+        new QuestionModel { 
+            Id = "question10", 
+            Text = "10. Зниження інтересу до життя, до звичної діяльності, в тому числі професійної.", 
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "yes", Text = "Так" },
+            new OptionsModel { Value = "no", Text = "Ні" }
+        },
+            SelectedOption = "" 
+        }
+    };
+
+    private int yesCount = 0;
+
+    private async Task HandleSelectedOptionChanged(QuestionModel question, string selectedOption)
+    {
+        question.SelectedOption = selectedOption;
+        await UpdateYesCount();
+    }
+
+    private async Task SubmitSurvey()
+    {
+        await UpdateYesCount();
+    }
+
+    private async Task UpdateYesCount()
+    {
+        yesCount = Questions.Count(q => q.SelectedOption == "yes");
+        await InvokeAsync(StateHasChanged);
+    }
+}

@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Shared\Components\Elements\IndexHeader.razor.scss" />
+    <None Remove="Shared\Components\Elements\Tabs.razor.scss" />
+    <None Remove="Shared\Forms\ShortQuestionForm.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Shared\Components\Elements\IndexHeader.razor.scss" />
+    <Content Include="Shared\Components\Elements\Tabs.razor.scss" />
+    <Content Include="Shared\Forms\ShortQuestionForm.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.SassCompiler" Version="1.72.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Shared\Components\Elements\IndexHeader.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Enums\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Shared\Components\Elements\Tabs.razor.scss" />
+  </ItemGroup>
+
+</Project>
