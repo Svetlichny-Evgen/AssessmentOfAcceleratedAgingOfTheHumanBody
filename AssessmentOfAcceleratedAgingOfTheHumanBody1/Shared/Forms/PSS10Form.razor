@@ -1,0 +1,203 @@
+﻿<div class="questions">
+    @foreach (var question in Questions)
+    {
+        <QuestionComponent TValue="string" QuestionId="@question.Id" QuestionText="@question.Text" Options="@question.Options" SelectedOption="@question.SelectedOption" SelectedOptionChanged="@((string value) => HandleSelectedOptionChanged(question, value))" />
+        <br />
+    }
+    <button @onclick="SubmitSurvey">Отправить</button>
+    <p>Количество ответов баллов: @totalScore</p>
+    <p>Висновок: @result</p>
+</div>
+
+@code {
+    int totalScore = 0;
+    string result = "";
+    private List<QuestionModel> Questions = new List<QuestionModel>
+    {
+        new QuestionModel {
+            Id = "question1",
+            Text = "1. Як часто за останній місяць ви були засмучені через щось, що трапилося несподівано?",
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "never", Text = "Ніколи" },
+            new OptionsModel { Value = "almostNever", Text = "Майже ніколи" },
+            new OptionsModel { Value = "somtimes", Text = "Іноді" },
+            new OptionsModel { Value = "quiteOften", Text = "Досить часто" },
+            new OptionsModel { Value = "veryOften", Text = "Дуже часто" }
+        },
+            SelectedOption = ""
+        },
+        new QuestionModel {
+            Id = "question2",
+            Text = "2. Як часто за останній місяць ви відчували, що не можете контролювати важливі речі у вашому житті?",
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "never", Text = "Ніколи" },
+            new OptionsModel { Value = "almostNever", Text = "Майже ніколи" },
+            new OptionsModel { Value = "somtimes", Text = "Іноді" },
+            new OptionsModel { Value = "quiteOften", Text = "Досить часто" },
+            new OptionsModel { Value = "veryOften", Text = "Дуже часто" }
+        },
+            SelectedOption = ""
+        },
+        new QuestionModel {
+            Id = "question3",
+            Text = "3. Як часто за останній місяць ви відчували знервованість та стрес?",
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "never", Text = "Ніколи" },
+            new OptionsModel { Value = "almostNever", Text = "Майже ніколи" },
+            new OptionsModel { Value = "somtimes", Text = "Іноді" },
+            new OptionsModel { Value = "quiteOften", Text = "Досить часто" },
+            new OptionsModel { Value = "veryOften", Text = "Дуже часто" }
+        },
+            SelectedOption = ""
+        },
+        new QuestionModel {
+            Id = "question4",
+            Text = "4. Як часто за останній місяць ви були впевнені, що зможете вирішити свої особисті проблеми?",
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "veryOften", Text = "Ніколи" },
+            new OptionsModel { Value = "quiteOften", Text = "Майже ніколи" },
+            new OptionsModel { Value = "somtimes", Text = "Іноді" },
+            new OptionsModel { Value = "almostNever", Text = "Досить часто" },
+            new OptionsModel { Value = "never", Text = "Дуже часто" }
+        },
+            SelectedOption = ""
+        },
+        new QuestionModel {
+            Id = "question5",
+            Text = "5. Як часто за останній місяць ви відчували, що все відбувається по-вашому (відповідно до ваших бажань, планів та поглядів)?",
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "veryOften", Text = "Ніколи" },
+            new OptionsModel { Value = "quiteOften", Text = "Майже ніколи" },
+            new OptionsModel { Value = "somtimes", Text = "Іноді" },
+            new OptionsModel { Value = "almostNever", Text = "Досить часто" },
+            new OptionsModel { Value = "never", Text = "Дуже часто" }
+        },
+            SelectedOption = ""
+        },
+        new QuestionModel {
+            Id = "question6",
+            Text = "6. Як часто за останній місяць ви відчували, що не можете впоратися з тим, що маєте зробити?",
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "never", Text = "Ніколи" },
+            new OptionsModel { Value = "almostNever", Text = "Майже ніколи" },
+            new OptionsModel { Value = "somtimes", Text = "Іноді" },
+            new OptionsModel { Value = "quiteOften", Text = "Досить часто" },
+            new OptionsModel { Value = "veryOften", Text = "Дуже часто" }
+        },
+            SelectedOption = ""
+        },
+        new QuestionModel {
+            Id = "question7",
+            Text = "7. Як часто за останній місяць ви були здатні контролювати роздратованість з приводу того, що відбувається у вашому житті?",
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "veryOften", Text = "Ніколи" },
+            new OptionsModel { Value = "quiteOften", Text = "Майже ніколи" },
+            new OptionsModel { Value = "somtimes", Text = "Іноді" },
+            new OptionsModel { Value = "almostNever", Text = "Досить часто" },
+            new OptionsModel { Value = "never", Text = "Дуже часто" }
+        },
+            SelectedOption = ""
+        },
+        new QuestionModel {
+            Id = "question8",
+            Text = "8. Як часто за останній місяць ви почувалися «господарем становища»?",
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "veryOften", Text = "Ніколи" },
+            new OptionsModel { Value = "quiteOften", Text = "Майже ніколи" },
+            new OptionsModel { Value = "somtimes", Text = "Іноді" },
+            new OptionsModel { Value = "almostNever", Text = "Досить часто" },
+            new OptionsModel { Value = "never", Text = "Дуже часто" }
+        },
+            SelectedOption = ""
+        },
+        new QuestionModel {
+            Id = "question9",
+            Text = "9. Як часто за останній місяць ви були розсерджені через події, на які не могли впливати?",
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "never", Text = "Ніколи" },
+            new OptionsModel { Value = "almostNever", Text = "Майже ніколи" },
+            new OptionsModel { Value = "somtimes", Text = "Іноді" },
+            new OptionsModel { Value = "quiteOften", Text = "Досить часто" },
+            new OptionsModel { Value = "veryOften", Text = "Дуже часто" }
+        },
+            SelectedOption = ""
+        },
+        new QuestionModel {
+            Id = "question10",
+            Text = "10. Як часто за останній місяць ви відчували, ніби труднощів накопичилося так багато, що ви не можете їх подолати?",
+            Options = new List<OptionsModel>
+        {
+            new OptionsModel { Value = "never", Text = "Ніколи" },
+            new OptionsModel { Value = "almostNever", Text = "Майже ніколи" },
+            new OptionsModel { Value = "somtimes", Text = "Іноді" },
+            new OptionsModel { Value = "quiteOften", Text = "Досить часто" },
+            new OptionsModel { Value = "veryOften", Text = "Дуже часто" }
+        },
+            SelectedOption = ""
+        }
+    };
+
+    private int CalculateTotalScore(List<QuestionModel> questions)
+    {
+        int score = 0;
+        foreach (var question in questions)
+        {
+            if (!string.IsNullOrEmpty(question.SelectedOption))
+            {
+                switch (question.SelectedOption)
+                {
+                    case "never":
+                        score += 0;
+                        break;
+                    case "almostNever":
+                        score += 1;
+                        break;
+                    case "somtimes":
+                        score += 2;
+                        break;
+                    case "quiteOften":
+                        score += 3;
+                        break;
+                    case "veryOften":
+                        score += 4;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        return score;
+    }
+
+    private async Task HandleSelectedOptionChanged(QuestionModel question, string selectedOption)
+    {
+        question.SelectedOption = selectedOption;
+        totalScore = CalculateTotalScore(Questions);
+    }
+
+    private async Task SubmitSurvey()
+    {
+        totalScore = CalculateTotalScore(Questions);
+        if (totalScore > 0 && totalScore <= 13)
+        {
+            result = "Низький рівень стресу.";
+        }
+        else if (totalScore >= 14 && totalScore <= 26)
+        {
+            result = "Середній рівень стресу.";
+        }
+        else if (totalScore >= 27 && totalScore <= 40)
+        {
+            result = "Високий рівень стресу.";
+        }
+    }
+}

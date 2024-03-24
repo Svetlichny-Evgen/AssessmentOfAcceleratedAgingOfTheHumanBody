@@ -174,7 +174,7 @@
     private async Task SubmitSurvey()
     {
         totalScore = CalculateTotalScore(Questions);
-        if (totalScore == 0 || totalScore <= 6)
+        if (totalScore > 0 && totalScore <= 6)
         {
             result = "Дуже низький";
         }
