@@ -7,12 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Pages\Index.razor.scss" />
     <None Remove="Shared\Components\Elements\IndexHeader.razor.scss" />
     <None Remove="Shared\Components\Elements\Tabs.razor.scss" />
     <None Remove="Shared\Forms\ShortQuestionForm.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Pages\Index.razor.scss" />
     <Content Include="Shared\Components\Elements\IndexHeader.razor.scss" />
     <Content Include="Shared\Components\Elements\Tabs.razor.scss" />
     <Content Include="Shared\Forms\ShortQuestionForm.razor.css" />
@@ -32,6 +34,10 @@
 
   <ItemGroup>
     <UpToDateCheckInput Remove="Shared\Components\Elements\Tabs.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\Index.razor.scss" />
   </ItemGroup>
 
 </Project>

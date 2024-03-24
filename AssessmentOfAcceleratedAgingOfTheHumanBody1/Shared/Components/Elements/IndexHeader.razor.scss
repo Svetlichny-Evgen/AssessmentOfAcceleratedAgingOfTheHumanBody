@@ -1,19 +1,31 @@
 ﻿.header-area {
-    height: 72px;
     width: 100%;
-    background: #369732;
-    display: flex;
-    justify-content: center;
+    background: #008080;
 
     .header {
-        display: flex;
-        /*background: #369732;*/
-    }
-
-    .header-item {
+        height: 72px;
         margin: auto;
-        margin-left: 0;
-        margin-right: 16px;
         display: flex;
+        margin-left: 20%;
+        margin-right: 20%;
+        justify-content: space-between;
+        align-items: center;
+
+
+        .title {
+            display: flex;
+            font-size: 20pt;
+        }
+
+        .header-items {
+            display: flex;
+
+
+            .header-item {
+                font-size: 20pt;
+                margin-left: 0;
+                margin-right: 20px;
+            }
+        }
     }
 }
