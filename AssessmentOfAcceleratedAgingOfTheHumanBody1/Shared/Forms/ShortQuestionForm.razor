@@ -4,9 +4,7 @@
         <QuestionComponent TValue="string" QuestionId="@question.Id" QuestionText="@question.Text" Options="@question.Options" SelectedOption="@question.SelectedOption" SelectedOptionChanged="@((string value) => HandleSelectedOptionChanged(question, value))" />
         <br />
     }
-    <button @onclick="SubmitSurvey">Отправить</button>
-
-    <p>Количество ответов "Да": @yesCount</p>
+    <p>Кількість відповідей "Так": @yesCount</p>
 </div>
 
 @code {

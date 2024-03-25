@@ -8,15 +8,19 @@
 
   <ItemGroup>
     <None Remove="Pages\Index.razor.scss" />
+    <None Remove="Shared\Components\Elements\IndexFooter.razor.scss" />
     <None Remove="Shared\Components\Elements\IndexHeader.razor.scss" />
     <None Remove="Shared\Components\Elements\Tabs.razor.scss" />
+    <None Remove="Shared\Components\Templates\QuestionComponent.razor.scss" />
     <None Remove="Shared\Forms\ShortQuestionForm.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Pages\Index.razor.scss" />
+    <Content Include="Shared\Components\Elements\IndexFooter.razor.scss" />
     <Content Include="Shared\Components\Elements\IndexHeader.razor.scss" />
     <Content Include="Shared\Components\Elements\Tabs.razor.scss" />
+    <Content Include="Shared\Components\Templates\QuestionComponent.razor.scss" />
     <Content Include="Shared\Forms\ShortQuestionForm.razor.css" />
   </ItemGroup>
 
@@ -30,6 +34,7 @@
 
   <ItemGroup>
     <Folder Include="Enums\" />
+    <Folder Include="wwwroot\fonts\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,6 +43,14 @@
 
   <ItemGroup>
     <UpToDateCheckInput Remove="Pages\Index.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Shared\Components\Templates\QuestionComponent.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Shared\Components\Elements\IndexFooter.razor.scss" />
   </ItemGroup>
 
 </Project>

@@ -1,8 +1,19 @@
+@font-face{
+    font-family: "Roboto";
+    src: url('../fonts/Roboto-Black.ttf')
+}
+
 * {
     user-select: none;
     outline: none;
     margin: 0;
     padding: 0;
+}
+
+body {
+    color: #333333;
+    background-color: #F5F5F5;
+    font-family: 'Roboto';
 }
 
 :root {

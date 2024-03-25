@@ -1,5 +1,18 @@
 .tabs {
   width: 100%;
 }
+.tabs button {
+  background-color: #007BFF;
+  color: #FFFFFF;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+.tabs button:hover {
+  background-color: #000dff;
+  color: #FFFFFF;
+}
 
 /*# sourceMappingURL=Tabs.razor.css.map */

@@ -6,7 +6,7 @@
         @switch (currentTab)
         {
             case 1:
-                <div>
+                <div class="first-tab">
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Habitasse platea dictumst vestibulum rhoncus est pellentesque. Eu scelerisque felis imperdiet proin fermentum leo. Enim neque volutpat ac tincidunt. Arcu felis bibendum ut tristique et egestas quis ipsum suspendisse. Ornare arcu dui vivamus arcu. Pretium viverra suspendisse potenti nullam ac tortor vitae purus. Egestas purus viverra accumsan in nisl nisi. Mattis nunc sed blandit libero volutpat sed cras ornare arcu. Pellentesque habitant morbi tristique senectus et. Congue nisi vitae suscipit tellus. Senectus et netus et malesuada fames ac turpis. Blandit volutpat maecenas volutpat blandit aliquam etiam erat velit scelerisque. Iaculis eu non diam phasellus vestibulum lorem sed.
                     </p>
                     <p>
@@ -21,32 +21,37 @@
                         Nunc mi ipsum faucibus vitae. Ipsum dolor sit amet consectetur adipiscing elit. Diam donec adipiscing tristique risus nec. Phasellus faucibus scelerisque eleifend donec pretium vulputate sapien nec. Eu turpis egestas pretium aenean. In mollis nunc sed id semper risus in. Pretium nibh ipsum consequat nisl vel pretium. At erat pellentesque adipiscing commodo elit at. Facilisis mauris sit amet massa vitae. Suscipit tellus mauris a diam maecenas. A lacus vestibulum sed arcu.
                     </p>
                 </div>
+                <button @onclick="NextTab">Розпочати тест</button>
                 break;
             case 2:
-                <div>
+                <div class="short-question-tab">
                     <ShortQuestionForm></ShortQuestionForm>
                 </div>
+                <button @onclick="NextTab">Далі</button>
                 break;
             case 3:
-                <div>
+                <div class="quality-of-life-tab">
                     <QualityOfLifeAssessmentScaleForm></QualityOfLifeAssessmentScaleForm>
                 </div>
+                <button @onclick="NextTab">Далі</button>
                 break;
             case 4:
-                <div>
+                <div class="k-10-page">
                     <K10Form></K10Form>     
                 </div>
+                <button @onclick="NextTab">Далі</button>
                 break;
             case 5:
-                <div>
+                <div class="pss-10-page">
                     <PSS10Form></PSS10Form>
                 </div>
+                <button @onclick="NextTab">Закінчити</button>
                 break;
             default:
                 <p>Это вкладка номер @currentTab</p>
                 break;
         }
-        <button @onclick="NextTab">Next</button>
+        
     </div>
 }
 else
@@ -68,6 +73,6 @@ else
 
     private void Finish()
     {
-        // Perform action when "Finish" button is clicked
+        currentTab = 1;
     }
 }
