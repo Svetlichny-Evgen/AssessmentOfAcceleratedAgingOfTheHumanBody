@@ -35,7 +35,7 @@
                 </div>
                 <button @onclick="NextTab">Далі</button>
                 break;
-            case 4:
+@*             case 4:
                 <div class="k-10-page">
                     <K10Form></K10Form>     
                 </div>
@@ -44,9 +44,9 @@
             case 5:
                 <div class="pss-10-page">
                     <PSS10Form></PSS10Form>
-                </div>
-                <button @onclick="NextTab">Закінчити</button>
-                break;
+                </div> 
+                <button @onclick="NextTab">Закінчити</button> 
+                @* break; *@
             default:
                 <p>Это вкладка номер @currentTab</p>
                 break;
@@ -64,7 +64,7 @@ else
 
 @code {
     private int currentTab = 1;
-    private List<int> tabs = new List<int> { 1, 2, 3, 4, 5, 6 }; // Number of tabs
+    private List<int> tabs = new List<int> { 1, 2, 3, 4 }; // Number of tabs
 
     private void NextTab()
     {
