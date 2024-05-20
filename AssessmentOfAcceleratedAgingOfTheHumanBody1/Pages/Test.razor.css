@@ -1,0 +1,9 @@
+.page {
+  display: flex;
+  flex-direction: column;
+}
+.page .tabs {
+  margin: 25px 20% 5% 20%;
+}
+
+/*# sourceMappingURL=Test.razor.css.map */

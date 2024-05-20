@@ -1,8 +1,34 @@
-﻿.page {
+﻿$primary-blue: #007BFF;
+$hover-blue: #0056b3;
+$active-blue: #004080;
+
+.page {
     display: flex;
     flex-direction: column;
 
-    .tabs {
+    .main {
         margin: 25px 20% 5% 20%;
+
+        .button-link {
+            display: inline-block; // Делает ссылку блочным элементом для возможности задать размеры
+            padding: 10px 20px; // Отступы для создания пространства внутри кнопки
+            background-color: $primary-blue; // Синий цвет фона
+            color: white; // Белый цвет текста
+            text-align: center; // Центрирование текста
+            text-decoration: none; // Удаление стандартного подчеркивания у ссылок
+            border: 2px solid $primary-blue; // Граница синего цвета
+            border-radius: 5px; // Скругленные углы
+            transition: background-color 0.3s, border-color 0.3s; // Плавные переходы для фонового цвета и границы
+            // Стили при наведении
+            &:hover {
+                background-color: $hover-blue; // Более темный синий цвет при наведении
+                border-color: $hover-blue; // Соответствующий цвет границы
+            }
+            // Стили при нажатии
+            &:active {
+                background-color: $active-blue; // Еще более темный синий цвет при нажатии
+                border-color: $active-blue; // Соответствующий цвет границы
+            }
+        }
     }
 }

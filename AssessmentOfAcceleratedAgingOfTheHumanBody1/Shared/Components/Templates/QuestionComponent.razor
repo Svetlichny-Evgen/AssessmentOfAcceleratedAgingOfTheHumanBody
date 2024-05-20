@@ -1,12 +1,23 @@
 ﻿@typeparam TValue
 
 <div class="form-group">
-    <label for="@QuestionId">@QuestionText</label><br />
+    <label for="@QuestionId">
+        @QuestionText
+        @if (!IsAnswered)
+        {
+            <span style="color: red;">*</span>  <!-- Красная звёздочка, если нет ответа -->
+        }
+    </label>
+    <br />
     @foreach (var option in Options)
     {
-        <input type="radio" id="@option.Value" name="@QuestionId" value="@option.Value" checked="@(_selectedOption == option.Value)" @onchange="() => OptionSelected(option.Value)" />
+        <input type="radio"
+               id="@option.Value"
+               name="@QuestionId"
+               value="@option.Value"
+               checked="@(_selectedOption == option.Value)"
+               @onchange="() => OptionSelected(option.Value)" />
         <label for="@option.Value">@option.Text</label>
-
         <br />
     }
 </div>
@@ -19,6 +30,8 @@
     [Parameter] public EventCallback<TValue> SelectedOptionChanged { get; set; }
 
     private string _selectedOption;
+
+    public bool IsAnswered => !string.IsNullOrEmpty(_selectedOption);
 
     private async Task OptionSelected(string value)
     {

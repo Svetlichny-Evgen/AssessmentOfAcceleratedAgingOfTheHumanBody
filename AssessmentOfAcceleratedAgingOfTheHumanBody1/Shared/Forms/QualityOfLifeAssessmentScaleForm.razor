@@ -10,6 +10,8 @@
 </div>
 
 @code {
+    [Parameter] public bool allQuestionsAnswered { get; set; }
+    [Parameter] public EventCallback<bool> AllQuestionsAnsweredChanged { get; set; }
     int totalScore = 0;
     string result = "";
     private List<QuestionModel> Questions = new List<QuestionModel>
@@ -169,8 +171,14 @@
     {
         question.SelectedOption = selectedOption;
         totalScore = CalculateTotalScore(Questions);
-    }
+        allQuestionsAnswered = AllQuestionsAnswered(); // Обновляем значение параметра
+        await AllQuestionsAnsweredChanged.InvokeAsync(allQuestionsAnswered); // Передаем значение наружу
 
+    }
+    private bool AllQuestionsAnswered()
+    {
+        return Questions.All(q => !string.IsNullOrWhiteSpace(q.SelectedOption));
+    }
     private async Task SubmitSurvey()
     {
         totalScore = CalculateTotalScore(Questions);

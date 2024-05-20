@@ -6,6 +6,7 @@ namespace AssessmentOfAcceleratedAgingOfTheHumanBody1.Models.User
     public class ResultsModel
     {
         public Guid? Id { get; set; }
+        public UserModel? UserId { get; set; }
         public double BodyMassIndex { get; set; }
         public string? BloodPressure { get; set; }
         public double WaistCircumference { get; set; }

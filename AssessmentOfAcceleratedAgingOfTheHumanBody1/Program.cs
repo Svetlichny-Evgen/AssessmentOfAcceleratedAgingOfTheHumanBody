@@ -1,5 +1,9 @@
+using AssessmentOfAcceleratedAgingOfTheHumanBody1.DAL.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Identity;
+using AssessmentOfAcceleratedAgingOfTheHumanBody1.Models.User;
 
 namespace AssessmentOfAcceleratedAgingOfTheHumanBody1
 {
@@ -12,7 +16,6 @@ namespace AssessmentOfAcceleratedAgingOfTheHumanBody1
             // Add services to the container.
             builder.Services.AddRazorPages();
             builder.Services.AddServerSideBlazor();
-
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
