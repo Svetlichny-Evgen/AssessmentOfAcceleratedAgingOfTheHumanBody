@@ -6,6 +6,12 @@
         @switch (currentTab)
         {
             case 1:
+            <div>
+                <UserLifeInfoForm></UserLifeInfoForm>
+            </div>
+                <button @onclick="NextTab">Далі</button>
+                break;
+            case 2:
                 <div class="short-question-tab">
                     <ShortQuestionForm AllQuestionsAnswered="@allQuestionsAnswered" AllQuestionsAnsweredChanged="HandleAllQuestionsAnsweredChanged"></ShortQuestionForm>
                 </div>
@@ -15,7 +21,7 @@
                 }
                 <button @onclick="NextTab" disabled="@(!allQuestionsAnswered)">Далі</button>
                 break;
-            case 2:
+            case 3:
                 <div class="quality-of-life-tab">
                     <QualityOfLifeAssessmentScaleForm AllQuestionsAnswered="@allQuestionsAnswered" AllQuestionsAnsweredChanged="HandleAllQuestionsAnsweredChanged"></QualityOfLifeAssessmentScaleForm>
                 </div>

@@ -1,0 +1,116 @@
+﻿@using AssessmentOfAcceleratedAgingOfTheHumanBody1.Models.User
+@using Microsoft.AspNetCore.Components.Forms
+
+<EditForm Model="@results" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+
+    <div class="form-group">
+        <label for="BodyMassIndex">Body Mass Index:</label>
+        <InputNumber id="BodyMassIndex" @bind-Value="@results.BodyMassIndex" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="BloodPressure">Blood Pressure:</label>
+        <InputText id="BloodPressure" @bind-Value="@results.BloodPressure" class="form-control" pattern="\d{2,3}/\d{2,3}" title="Please enter in the format 'upper/lower'" oninput="this.value = this.value.replace(/[^0-9/]/g, '')" />
+        <small id="BloodPressureHelp" class="form-text text-muted">Enter in the format 'upper/lower'.</small>
+    </div>
+
+    <div class="form-group">
+        <label for="WaistCircumference">Waist Circumference:</label>
+        <InputNumber id="WaistCircumference" @bind-Value="@results.WaistCircumference" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="HeartRate">Heart Rate:</label>
+        <InputNumber id="HeartRate" @bind-Value="@results.HeartRate" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="SleepTime">Sleep Time:</label>
+        <InputNumber id="SleepTime" @bind-Value="@results.SleepTime" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="CircadianRhythms">Circadian Rhythms:</label>
+        <InputCheckbox id="CircadianRhythms" @bind-Value="@results.CircadianRhythms" class="form-check" />
+    </div>
+
+    <div class="form-group">
+        <label for="NumberOfHoursSitting">Number Of Hours Sitting:</label>
+        <InputNumber id="NumberOfHoursSitting" @bind-Value="@results.NumberOfHoursSitting" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="NumberOfCigarettesSmokedPerDay">Number Of Cigarettes Smoked Per Day:</label>
+        <InputNumber id="NumberOfCigarettesSmokedPerDay" @bind-Value="@results.NumberOfCigarettesSmokedPerDay" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="AmountOfAlcoholDrunkPerDay">Amount Of Alcohol Drunk Per Day:</label>
+        <InputNumber id="AmountOfAlcoholDrunkPerDay" @bind-Value="@results.AmountOfAlcoholDrunkPerDay" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="NumberOfMeals">Number Of Meals:</label>
+        <InputNumber id="NumberOfMeals" @bind-Value="@results.NumberOfMeals" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="ResultsOfTheQualityOfLifeQuestionnaire">Results Of The Quality Of Life Questionnaire:</label>
+        <InputNumber id="ResultsOfTheQualityOfLifeQuestionnaire" @bind-Value="@results.ResultsOfTheQualityOfLifeQuestionnaire" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="ResultsOfThePTSDQuestionnaire">Results Of The PTSD Questionnaire:</label>
+        <InputNumber id="ResultsOfThePTSDQuestionnaire" @bind-Value="@results.ResultsOfThePTSDQuestionnaire" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+@code {
+    private ResultsModel results = new ResultsModel();
+    private int upperPressure;
+    private int lowerPressure;
+
+
+    private void HandleValidSubmit()
+    {
+        if (AllFieldsFilled() && IsValidPressures())
+        {
+            // Здесь выполняется логика при успешной отправке формы
+        }
+        else
+        {
+            // Здесь обрабатываем сценарий, когда не все поля заполнены или введены неверные данные
+        }
+    }
+
+    private bool AllFieldsFilled()
+    {
+        return !string.IsNullOrWhiteSpace(results.BloodPressure) &&
+               results.BodyMassIndex != 0 &&
+               results.WaistCircumference != 0 &&
+               results.HeartRate != 0 &&
+               results.SleepTime != 0 &&
+               results.NumberOfHoursSitting != 0 &&
+               results.NumberOfMeals != 0 &&
+               results.ResultsOfTheQualityOfLifeQuestionnaire != 0 &&
+               results.ResultsOfThePTSDQuestionnaire != 0;
+    }
+
+    private bool IsValidPressures()
+    {
+        if (string.IsNullOrWhiteSpace(results.BloodPressure))
+            return false;
+
+        string[] parts = results.BloodPressure.Split('/');
+        if (parts.Length != 2)
+            return false;
+
+        if (!int.TryParse(parts[0], out upperPressure) || !int.TryParse(parts[1], out lowerPressure))
+            return false;
+
+        return true;
+    }
+}
