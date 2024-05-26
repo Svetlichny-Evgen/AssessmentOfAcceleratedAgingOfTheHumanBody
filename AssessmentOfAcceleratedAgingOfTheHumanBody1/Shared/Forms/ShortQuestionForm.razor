@@ -10,6 +10,7 @@
 @code {
     [Parameter] public bool allQuestionsAnswered { get; set; }
     [Parameter] public EventCallback<bool> AllQuestionsAnsweredChanged { get; set; }
+    [Parameter] public int yesCount { get; set; }
     private List<QuestionModel> Questions = new List<QuestionModel>
     {
         new QuestionModel { 
@@ -114,7 +115,6 @@
         }
     };
 
-    private int yesCount = 0;
 
     private async Task HandleSelectedOptionChanged(QuestionModel question, string selectedOption)
     {

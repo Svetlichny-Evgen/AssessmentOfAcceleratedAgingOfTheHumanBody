@@ -43,6 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="DAL\Data\Migrations\" />
     <Folder Include="wwwroot\fonts\" />
   </ItemGroup>
 

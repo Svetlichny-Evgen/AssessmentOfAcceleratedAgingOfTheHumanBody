@@ -1,0 +1,67 @@
+﻿@page "/register"
+@using AssessmentOfAcceleratedAgingOfTheHumanBody1.DAL.Interfaces
+@using AssessmentOfAcceleratedAgingOfTheHumanBody1.Enums
+@using AssessmentOfAcceleratedAgingOfTheHumanBody1.Models.User
+@inject NavigationManager Navigation
+@inject HttpClient Http
+
+<EditForm Model="@accountModel" OnValidSubmit="@HandleRegister">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="fullName">Full Name:</label>
+        <InputText id="fullName" @bind-Value="@accountModel.FullName" class="form-control" />
+        <ValidationMessage For="@(() => accountModel.FullName)" />
+    </div>
+
+    <div class="form-group">
+        <label for="birthday">Birthday:</label>
+        <InputDate id="birthday" @bind-Value="@accountModel.Birthday" class="form-control" />
+        <ValidationMessage For="@(() => accountModel.Birthday)" />
+    </div>
+
+    <div class="form-group">
+        <label for="sex">Sex:</label>
+        <InputSelect id="sex" @bind-Value="@accountModel.Sex" class="form-control">
+            @foreach (var sex in Enum.GetValues(typeof(Sex)))
+            {
+                <option value="@sex">@sex</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => accountModel.Sex)" />
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <InputText id="email" @bind-Value="@accountModel.EMail" class="form-control" />
+        <ValidationMessage For="@(() => accountModel.EMail)" />
+    </div>
+
+    <div class="form-group">
+        <label for="password">Password:</label>
+        <InputText id="password" @bind-Value="@accountModel.Password" class="form-control" type="password" />
+        <ValidationMessage For="@(() => accountModel.Password)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+
+@code {
+    private AccountModel accountModel = new AccountModel();
+    private string errorMessage;
+
+    private async Task HandleRegister()
+    {
+        var response = await Http.PostAsJsonAsync("/account/register", accountModel);
+        if (response.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo("/login");
+        }
+        else
+        {
+            errorMessage = "Registration failed.";
+        }
+    }
+}

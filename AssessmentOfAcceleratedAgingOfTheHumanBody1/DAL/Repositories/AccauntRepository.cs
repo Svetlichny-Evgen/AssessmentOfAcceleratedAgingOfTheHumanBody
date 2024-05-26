@@ -1,33 +1,49 @@
-﻿using AssessmentOfAcceleratedAgingOfTheHumanBody1.DAL.Interfaces;
+﻿using AssessmentOfAcceleratedAgingOfTheHumanBody1.DAL.Data;
+using AssessmentOfAcceleratedAgingOfTheHumanBody1.DAL.Interfaces;
 using AssessmentOfAcceleratedAgingOfTheHumanBody1.Models.User;
+using Microsoft.EntityFrameworkCore;
 
 namespace AssessmentOfAcceleratedAgingOfTheHumanBody1.DAL.Repositories
 {
     public class AccauntRepository : IAccauntRepository
     {
-        public AccauntModel Create(AccauntModel model)
+        private readonly EntityDataBase _database;
+
+        public AccauntRepository(EntityDataBase database)
         {
-            throw new NotImplementedException();
+            _database = database;
         }
 
-        public bool Delete(AccauntModel model)
+        public AccountModel Create(AccountModel model)
         {
-            throw new NotImplementedException();
+            var entry = _database.Accounts.Add(model);
+            _database.SaveChanges();
+            return entry.Entity;
         }
 
-        public AccauntModel Read(Guid id)
+        public bool Delete(AccountModel model)
         {
-            throw new NotImplementedException();
+            var entity = _database.Accounts.First(u => u.Id == model.Id);
+            var entry = _database.Accounts.Remove(entity);
+            _database.SaveChanges();
+            return true;
         }
 
-        public List<AccauntModel> Select()
+        public AccountModel Read(Guid id)
         {
-            throw new NotImplementedException();
+            return _database.Accounts.First(u => u.Id == id);
         }
 
-        public AccauntModel Update(AccauntModel model)
+        public List<AccountModel> Select()
         {
-            throw new NotImplementedException();
+            return _database.Accounts.ToList();
+        }
+
+        public AccountModel Update(AccountModel model)
+        {
+            var entry = _database.Accounts.Update(model);
+            _database.SaveChanges();
+            return entry.Entity;
         }
     }
 }

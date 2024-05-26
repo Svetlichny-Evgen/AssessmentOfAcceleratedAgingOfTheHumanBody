@@ -1,4 +1,5 @@
 ﻿@using System.Collections.Generic
+@using AssessmentOfAcceleratedAgingOfTheHumanBody1.Models.User
 
 @if (currentTab < tabs.Count)
 {
@@ -6,36 +7,115 @@
         @switch (currentTab)
         {
             case 1:
-            <div>
-                <UserLifeInfoForm></UserLifeInfoForm>
-            </div>
+                <div class="user-life">
+                    <EditForm Model="@Results" OnValidSubmit="@HandleValidSubmit">
+                        <DataAnnotationsValidator />
+
+                        <div class="form-group">
+                            <label for="BodyMassIndex">Body Mass Index:</label>
+                            <InputNumber id="BodyMassIndex" @bind-Value="@Results.BodyMassIndex" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="BloodPressure">Blood Pressure:</label>
+                            <InputText id="BloodPressure" @bind-Value="@Results.BloodPressure" class="form-control" pattern="\d{2,3}/\d{2,3}" title="Please enter in the format 'upper/lower'" oninput="this.value = this.value.replace(/[^0-9/]/g, '')" />
+                            <small id="BloodPressureHelp" class="form-text text-muted">Enter in the format 'upper/lower'.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="WaistCircumference">Waist Circumference:</label>
+                            <InputNumber id="WaistCircumference" @bind-Value="@Results.WaistCircumference" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="HeartRate">Heart Rate:</label>
+                            <InputNumber id="HeartRate" @bind-Value="@Results.HeartRate" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="SleepTime">Sleep Time:</label>
+                            <InputNumber id="SleepTime" @bind-Value="@Results.SleepTime" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="CircadianRhythms">Circadian Rhythms:</label>
+                            <InputCheckbox id="CircadianRhythms" @bind-Value="@Results.CircadianRhythms" class="form-check" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="NumberOfHoursSitting">Number Of Hours Sitting:</label>
+                            <InputNumber id="NumberOfHoursSitting" @bind-Value="@Results.NumberOfHoursSitting" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="NumberOfCigarettesSmokedPerDay">Number Of Cigarettes Smoked Per Day:</label>
+                            <InputNumber id="NumberOfCigarettesSmokedPerDay" @bind-Value="@Results.NumberOfCigarettesSmokedPerDay" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="AmountOfAlcoholDrunkPerDay">Amount Of Alcohol Drunk Per Day:</label>
+                            <InputNumber id="AmountOfAlcoholDrunkPerDay" @bind-Value="@Results.AmountOfAlcoholDrunkPerDay" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="NumberOfMeals">Number Of Meals:</label>
+                            <InputNumber id="NumberOfMeals" @bind-Value="@Results.NumberOfMeals" class="form-control" />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </EditForm>
+                </div>
                 <button @onclick="NextTab">Далі</button>
                 break;
+
             case 2:
-                <div class="short-question-tab">
-                    <ShortQuestionForm AllQuestionsAnswered="@allQuestionsAnswered" AllQuestionsAnsweredChanged="HandleAllQuestionsAnsweredChanged"></ShortQuestionForm>
+                <div class="questions">
+                    @foreach (var question in Questions1)
+                    {
+                        <QuestionComponent TValue="string"
+                                           QuestionId="@question.Id"
+                                           QuestionText="@question.Text"
+                                           Options="@question.Options"
+                                           SelectedOption="@question.SelectedOption"
+                                           SelectedOptionChanged="@((string value) => HandleSelectedOptionChanged1(question, value))" />
+                        <br />
+                    }
+                    <p>Кількість відповідей "Так": @yesCount1</p>
                 </div>
-                @if (!allQuestionsAnswered)
+                @if (!allQuestionsAnswered1)
                 {
                     <p style="color: red;">Вам необходимо ответить на все вопросы</p>
                 }
-                <button @onclick="NextTab" disabled="@(!allQuestionsAnswered)">Далі</button>
+                <button @onclick="NextTab" disabled="@(!allQuestionsAnswered1)">Далі</button>
                 break;
+
             case 3:
-                <div class="quality-of-life-tab">
-                    <QualityOfLifeAssessmentScaleForm AllQuestionsAnswered="@allQuestionsAnswered" AllQuestionsAnsweredChanged="HandleAllQuestionsAnsweredChanged"></QualityOfLifeAssessmentScaleForm>
+                <div class="questions">
+                    @foreach (var question in Questions2)
+                    {
+                        <QuestionComponent TValue="string"
+                                           QuestionId="@question.Id"
+                                           QuestionText="@question.Text"
+                                           Options="@question.Options"
+                                           SelectedOption="@question.SelectedOption"
+                                           SelectedOptionChanged="@((string value) => HandleSelectedOptionChanged2(question, value))" />
+                        <br />
+                    }
+                    <button @onclick="SubmitSurvey">Отправить</button>
+                    <p>Кількість балів: @TotalScore</p>
+                    <p>Рівень якості життя: @result</p>
                 </div>
-                @if (!allQuestionsAnswered)
+                @if (!allQuestionsAnswered2)
                 {
                     <p style="color: red;">Вам необходимо ответить на все вопросы</p>
                 }
-                <button @onclick="NextTab" disabled="@(!allQuestionsAnswered)">Далі</button>
+                <button @onclick="ShowAll" disabled="@(!allQuestionsAnswered2)">Далі</button>
                 break;
+
             default:
                 <p>Это вкладка номер @currentTab</p>
                 break;
         }
-        
     </div>
 }
 else
@@ -47,22 +127,409 @@ else
 }
 
 @code {
+    #region UserLifeStyle
+    public ResultsModel Results { get; set; } = new ResultsModel();
+    private int upperPressure;
+    private int lowerPressure;
+
+    private void HandleValidSubmit()
+    {
+        if (AllFieldsFilled() && IsValidPressures())
+        {
+            // Здесь выполняется логика при успешной отправке формы
+        }
+        else
+        {
+            // Здесь обрабатываем сценарий, когда не все поля заполнены или введены неверные данные
+        }
+    }
+
+    private bool AllFieldsFilled()
+    {
+        return !string.IsNullOrWhiteSpace(Results.BloodPressure) &&
+               Results.BodyMassIndex != 0 &&
+               Results.WaistCircumference != 0 &&
+               Results.HeartRate != 0 &&
+               Results.SleepTime != 0 &&
+               Results.NumberOfHoursSitting != 0 &&
+               Results.NumberOfMeals != 0;
+    }
+
+    private bool IsValidPressures()
+    {
+        if (string.IsNullOrWhiteSpace(Results.BloodPressure))
+            return false;
+
+        string[] parts = Results.BloodPressure.Split('/');
+        if (parts.Length != 2)
+            return false;
+
+        if (!int.TryParse(parts[0], out upperPressure) || !int.TryParse(parts[1], out lowerPressure))
+            return false;
+
+        return true;
+    }
+    #endregion
+
+    #region ShortQuestionsForm
+    public bool allQuestionsAnswered1 { get; set; }
+    private List<QuestionModel> Questions1 = new List<QuestionModel>
+    {
+        new QuestionModel {
+            Id = "question1",
+            Text = "1. Нездатність розслабитися (напруженість)",
+            Options = new List<OptionsModel>
+            {
+                new OptionsModel { Value = "yes", Text = "Так" },
+                new OptionsModel { Value = "no", Text = "Ні" }
+            },
+            SelectedOption = null
+        },
+        new QuestionModel {
+            Id = "question2",
+            Text = "2. Роздратування і поганий настрій.",
+            Options = new List<OptionsModel>
+            {
+                new OptionsModel { Value = "yes", Text = "Так" },
+                new OptionsModel { Value = "no", Text = "Ні" }
+            },
+            SelectedOption = null
+        },
+        new QuestionModel {
+            Id = "question3",
+            Text = "3. Вторгнення у свідомість неприємних образів або спогадів про інцидент.",
+            Options = new List<OptionsModel>
+            {
+                new OptionsModel { Value = "yes", Text = "Так" },
+                new OptionsModel { Value = "no", Text = "Ні" }
+            },
+            SelectedOption = null
+        },
+        new QuestionModel {
+            Id = "question4",
+            Text = "4. Неуважність, погане зосередження уваги.",
+            Options = new List<OptionsModel>
+            {
+                new OptionsModel { Value = "yes", Text = "Так" },
+                new OptionsModel { Value = "no", Text = "Ні" }
+            },
+            SelectedOption = null
+        },
+        new QuestionModel {
+            Id = "question5",
+            Text = "5. Сильний смуток, печаль.",
+            Options = new List<OptionsModel>
+            {
+                new OptionsModel { Value = "yes", Text = "Так" },
+                new OptionsModel { Value = "no", Text = "Ні" }
+            },
+            SelectedOption = null
+        },
+        new QuestionModel {
+            Id = "question6",
+            Text = "6. Надмірна пильність.",
+            Options = new List<OptionsModel>
+            {
+                new OptionsModel { Value = "yes", Text = "Так" },
+                new OptionsModel { Value = "no", Text = "Ні" }
+            },
+            SelectedOption = null
+        },
+        new QuestionModel {
+            Id = "question7",
+            Text = "7. Часті прокидання вночі.",
+            Options = new List<OptionsModel>
+            {
+                new OptionsModel { Value = "yes", Text = "Так" },
+                new OptionsModel { Value = "no", Text = "Ні" }
+            },
+            SelectedOption = null
+        },
+        new QuestionModel {
+            Id = "question8",
+            Text = "8. Прискорене серцебиття.",
+            Options = new List<OptionsModel>
+            {
+                new OptionsModel { Value = "yes", Text = "Так" },
+                new OptionsModel { Value = "no", Text = "Ні" }
+            },
+            SelectedOption = null
+        },
+        new QuestionModel {
+            Id = "question9",
+            Text = "9. Безнадійність.",
+            Options = new List<OptionsModel>
+            {
+                new OptionsModel { Value = "yes", Text = "Так" },
+                new OptionsModel { Value = "no", Text = "Ні" }
+            },
+            SelectedOption = null
+        },
+        new QuestionModel {
+            Id = "question10",
+            Text = "10. Неможливість отримувати задоволення від щоденних справ.",
+            Options = new List<OptionsModel>
+            {
+                new OptionsModel { Value = "yes", Text = "Так" },
+                new OptionsModel { Value = "no", Text = "Ні" }
+            },
+            SelectedOption = null
+        }
+    };
+
+    private int yesCount1 = 0;
+
+    private void HandleSelectedOptionChanged1(QuestionModel question, string value)
+    {
+        question.SelectedOption = value;
+        yesCount1 = Questions1.Count(q => q.SelectedOption == "yes");
+        allQuestionsAnswered1 = Questions1.All(q => !string.IsNullOrEmpty(q.SelectedOption));
+    }
+    #endregion
+
+    #region LongQuestionsForm
+    public bool allQuestionsAnswered2 { get; set; }
+    private List<QuestionModel> Questions2 = new List<QuestionModel>
+    {
+        new QuestionModel {
+            Id = "question1",
+            Text = "1. Оцінка свого здоров'я",
+            Options = new List<OptionsModel>
+            {
+                new OptionsModel { Value = "1", Text = "Немає здоров'я" },
+                new OptionsModel { Value = "2", Text = "Погане здоров'я" },
+                new OptionsModel { Value = "3", Text = "Хороше здоров'я" },
+                new OptionsModel { Value = "4", Text = "Прекрасне здоров'я" }
+            },
+            SelectedOption = null
+        },
+        new QuestionModel {
+            Id = "question2",
+            Text = "2. Реалізація",
+            Options = new List<OptionsModel>
+            {
+                new OptionsModel { Value = "1", Text = "Не реалізований" },
+                new OptionsModel { Value = "2", Text = "Частково реалізований" },
+                new OptionsModel { Value = "3", Text = "В основному реалізований" },
+                new OptionsModel { Value = "4", Text = "Реалізований більше, ніж очікував" }
+            },
+            SelectedOption = null
+        },
+        new QuestionModel {
+            Id = "question3",
+            Text = "3. Любов",
+            Options = new List<OptionsModel>
+            {
+                new OptionsModel { Value = "1", Text = "Ніхто не любив і не любить" },
+                new OptionsModel { Value = "2", Text = "Любили в минулому" },
+                new OptionsModel { Value = "3", Text = "Люблять лише близькі люди" },
+                new OptionsModel { Value = "4", Text = "Люблять рідні, близькі та інші люди" }
+            },
+            SelectedOption = null
+        },
+        new QuestionModel {
+            Id = "question4",
+            Text = "4. Гедонія (задоволення)",
+            Options = new List<OptionsModel>
+            {
+                new OptionsModel { Value = "1", Text = "Відсутність радості в житті" },
+                new OptionsModel { Value = "2", Text = "Іноді щось приносить задоволення" },
+                new OptionsModel { Value = "3", Text = "Отримую задоволення від життя" },
+                new OptionsModel { Value = "4", Text = "Постійно задоволений життям" }
+            },
+            SelectedOption = null
+        },
+        new QuestionModel {
+            Id = "question5",
+            Text = "5. Друзі",
+            Options = new List<OptionsModel>
+            {
+                new OptionsModel { Value = "1", Text = "Не було й нема" },
+                new OptionsModel { Value = "2", Text = "Були, тепер – нема" },
+                new OptionsModel { Value = "3", Text = "Є, але зустрічаємося рідко" },
+                new OptionsModel { Value = "4", Text = "Є, зустрічаємося часто" }
+            },
+            SelectedOption = null
+        },
+        new QuestionModel {
+            Id = "question6",
+            Text = "6. Соціальна активність",
+            Options = new List<OptionsModel>
+            {
+                new OptionsModel { Value = "1", Text = "Повна відсутність активності" },
+                new OptionsModel { Value = "2", Text = "Незначна активність" },
+                new OptionsModel { Value = "3", Text = "Активний, але не постійно" },
+                new OptionsModel { Value = "4", Text = "Активний, постійно" }
+            },
+            SelectedOption = null
+        },
+        new QuestionModel {
+            Id = "question7",
+            Text = "7. Фінансове благополуччя",
+            Options = new List<OptionsModel>
+            {
+                new OptionsModel { Value = "1", Text = "Значні проблеми" },
+                new OptionsModel { Value = "2", Text = "Недостатнє" },
+                new OptionsModel { Value = "3", Text = "Задовільне, проте частково" },
+                new OptionsModel { Value = "4", Text = "Повністю задоволений" }
+            },
+            SelectedOption = null
+        },
+        new QuestionModel {
+            Id = "question8",
+            Text = "8. Спільне проведення часу з сім'єю та друзями",
+            Options = new List<OptionsModel>
+            {
+                new OptionsModel { Value = "1", Text = "Відсутнє" },
+                new OptionsModel { Value = "2", Text = "Іноді" },
+                new OptionsModel { Value = "3", Text = "Досить часто" },
+                new OptionsModel { Value = "4", Text = "Дуже часто" }
+            },
+            SelectedOption = null
+        },
+        new QuestionModel {
+            Id = "question9",
+            Text = "9. Задоволеність роботою",
+            Options = new List<OptionsModel>
+            {
+                new OptionsModel { Value = "1", Text = "Не задоволений" },
+                new OptionsModel { Value = "2", Text = "Частково задоволений" },
+                new OptionsModel { Value = "3", Text = "Задоволений" },
+                new OptionsModel { Value = "4", Text = "Дуже задоволений" }
+            },
+            SelectedOption = null
+        },
+        new QuestionModel {
+            Id = "question10",
+            Text = "10. Соціальний статус",
+            Options = new List<OptionsModel>
+            {
+                new OptionsModel { Value = "1", Text = "Не задоволений" },
+                new OptionsModel { Value = "2", Text = "Частково задоволений" },
+                new OptionsModel { Value = "3", Text = "Задоволений" },
+                new OptionsModel { Value = "4", Text = "Дуже задоволений" }
+            },
+            SelectedOption = null
+        }
+    };
+
+    private int TotalScore = 0;
+    private string result;
+
+    private void HandleSelectedOptionChanged2(QuestionModel question, string value)
+    {
+        question.SelectedOption = value;
+        allQuestionsAnswered2 = Questions2.All(q => !string.IsNullOrEmpty(q.SelectedOption));
+    }
+
+    private void SubmitSurvey()
+    {
+        TotalScore = Questions2.Sum(q => int.Parse(q.SelectedOption));
+        DetermineQualityOfLife();
+    }
+
+    private void DetermineQualityOfLife()
+    {
+        if (TotalScore <= 12)
+        {
+            result = "High";
+        }
+        else if (TotalScore <= 20)
+        {
+            result = "Medium";
+        }
+        else
+        {
+            result = "Low";
+        }
+    }
+    #endregion
+
+    #region TabNavigation
+    private List<int> tabs = new List<int> { 1, 2, 3, 4 };
     private int currentTab = 1;
-    private List<int> tabs = new List<int> { 1, 2, 3, 4 }; // Number of tabs
 
     private void NextTab()
     {
-        currentTab++;
-        allQuestionsAnswered = false;
+        if (currentTab < tabs.Count)
+        {
+            currentTab++;
+        }
     }
 
     private void Finish()
     {
-        currentTab = 1;
+        currentTab = tabs.Count + 1;
     }
-    private bool allQuestionsAnswered = false;
-    private void HandleAllQuestionsAnsweredChanged(bool value)
+    #endregion
+
+    #region Results
+
+    public void DataPreprocessor()
     {
-        allQuestionsAnswered = value;
+        ResultsModel results = new ResultsModel()
+        {
+                Id = new Guid(),
+                AccauntId = new AccountModel(),
+                BodyMassIndex = Results.BodyMassIndex,
+                BloodPressure = Results.BloodPressure,
+                WaistCircumference = Results.WaistCircumference,
+                HeartRate = Results.HeartRate,
+                SleepTime = Results.SleepTime,
+                CircadianRhythms = Results.CircadianRhythms,
+                NumberOfHoursSitting = Results.NumberOfHoursSitting,
+                NumberOfCigarettesSmokedPerDay = Results.NumberOfCigarettesSmokedPerDay,
+                AmountOfAlcoholDrunkPerDay = Results.AmountOfAlcoholDrunkPerDay,
+                NumberOfMeals = Results.NumberOfMeals,
+                ResultsOfTheQualityOfLifeQuestionnaire = yesCount1,
+                ResultsOfThePTSDQuestionnaire = TotalScore,
+                ResultOfDiagnostic = ""
+
+        };
     }
+
+    public void ShowAll()
+    {
+
+        ResultsModel results = new ResultsModel()
+        {
+                Id = new Guid(),
+                AccauntId = new AccountModel(),
+                BodyMassIndex = Results.BodyMassIndex,
+                BloodPressure = Results.BloodPressure,
+                WaistCircumference = Results.WaistCircumference,
+                HeartRate = Results.HeartRate,
+                SleepTime = Results.SleepTime,
+                CircadianRhythms = Results.CircadianRhythms,
+                NumberOfHoursSitting = Results.NumberOfHoursSitting,
+                NumberOfCigarettesSmokedPerDay = Results.NumberOfCigarettesSmokedPerDay,
+                AmountOfAlcoholDrunkPerDay = Results.AmountOfAlcoholDrunkPerDay,
+                NumberOfMeals = Results.NumberOfMeals,
+                ResultsOfTheQualityOfLifeQuestionnaire = yesCount1,
+                ResultsOfThePTSDQuestionnaire = TotalScore,
+                ResultOfDiagnostic = ""
+        };
+
+        Console.WriteLine("**Results Summary**");
+        Console.WriteLine($"ID: {results.Id}");  // Interpolated string for clarity
+        Console.WriteLine($"Body Mass Index (BMI): {results.BodyMassIndex}");
+        Console.WriteLine($"Blood Pressure: {results.BloodPressure}");
+        Console.WriteLine($"Waist Circumference: {results.WaistCircumference} cm");
+        Console.WriteLine($"Heart Rate: {results.HeartRate} bpm");
+        Console.WriteLine($"Sleep Time: {results.SleepTime}");
+        Console.WriteLine($"Circadian Rhythms: {results.CircadianRhythms}");
+        Console.WriteLine($"Number of Hours Sitting: {results.NumberOfHoursSitting}");
+        Console.WriteLine($"Number of Cigarettes Smoked Per Day: {results.NumberOfCigarettesSmokedPerDay}");
+        Console.WriteLine($"Amount of Alcohol Drunk Per Day: {results.AmountOfAlcoholDrunkPerDay} units");  // Add unit (optional)
+        Console.WriteLine($"Number of Meals: {results.NumberOfMeals}");
+        Console.WriteLine($"Results of Quality of Life Questionnaire: {results.ResultsOfTheQualityOfLifeQuestionnaire}");  // Corrected typo
+        Console.WriteLine($"Results of PTSD Questionnaire: {results.ResultsOfThePTSDQuestionnaire}");
+        Console.WriteLine($"Result of Diagnostic: {results.ResultOfDiagnostic}");
+
+        // Add a blank line for better presentation:
+        Console.WriteLine();
+    }
+
+
+    #endregion
 }

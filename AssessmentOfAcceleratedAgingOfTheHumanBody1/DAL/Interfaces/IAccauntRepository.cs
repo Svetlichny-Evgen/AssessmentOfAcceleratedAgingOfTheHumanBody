@@ -2,7 +2,7 @@
 
 namespace AssessmentOfAcceleratedAgingOfTheHumanBody1.DAL.Interfaces
 {
-    public interface IAccauntRepository : IEntityReposetory<AccauntModel>
+    public interface IAccauntRepository : IEntityReposetory<AccountModel>
     {
        
     }

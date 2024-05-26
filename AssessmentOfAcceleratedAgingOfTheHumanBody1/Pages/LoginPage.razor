@@ -1,0 +1,49 @@
+﻿@page "/login"
+@using AssessmentOfAcceleratedAgingOfTheHumanBody1.Authentication
+@using System.ComponentModel.DataAnnotations
+@using AssessmentOfAcceleratedAgingOfTheHumanBody1.Models.User
+@inject IJSRuntime js
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+@inject HttpClient Http
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <form>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input @bind="email" type="email" class="form-control" id="email" placeholder="Enter email">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input @bind="password" type="password" class="form-control" id="password" placeholder="Password">
+                </div>
+                <button type="button" class="btn btn-primary btn-block" @onclick="HandleLogin">Login</button>
+                <div class="text-danger mt-3">@errorMessage</div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    private string email;
+    private string password;
+    private string errorMessage;
+
+    private async Task HandleLogin()
+    {
+        var response = await Http.PostAsJsonAsync("/login", new { email, password });
+        if (response.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo("/");
+        }
+        else
+        {
+            errorMessage = "Invalid login attempt.";
+        }
+    }
+
+
+}

@@ -5,14 +5,14 @@
         <br />
     }
     <button @onclick="SubmitSurvey">Отправить</button>
-    <p>Кількість балів: @totalScore</p>
+    <p>Кількість балів: @TotalScore</p>
     <p>Рівень якості життя: @result</p>
 </div>
 
 @code {
     [Parameter] public bool allQuestionsAnswered { get; set; }
     [Parameter] public EventCallback<bool> AllQuestionsAnsweredChanged { get; set; }
-    int totalScore = 0;
+    [Parameter] public int TotalScore { get; set; }
     string result = "";
     private List<QuestionModel> Questions = new List<QuestionModel>
     {
@@ -170,7 +170,7 @@
     private async Task HandleSelectedOptionChanged(QuestionModel question, string selectedOption)
     {
         question.SelectedOption = selectedOption;
-        totalScore = CalculateTotalScore(Questions);
+        TotalScore = CalculateTotalScore(Questions);
         allQuestionsAnswered = AllQuestionsAnswered(); // Обновляем значение параметра
         await AllQuestionsAnsweredChanged.InvokeAsync(allQuestionsAnswered); // Передаем значение наружу
 
@@ -181,24 +181,24 @@
     }
     private async Task SubmitSurvey()
     {
-        totalScore = CalculateTotalScore(Questions);
-        if (totalScore > 0 && totalScore <= 6)
+        TotalScore = CalculateTotalScore(Questions);
+        if (TotalScore > 0 && TotalScore <= 6)
         {
             result = "Дуже низький";
         }
-        else if (totalScore >= 7 && totalScore <= 12)
+        else if (TotalScore >= 7 && TotalScore <= 12)
         {
             result = "Низький";
         }
-        else if (totalScore >= 13 && totalScore <= 18)
+        else if (TotalScore >= 13 && TotalScore <= 18)
         {
             result = "Середній";
         }
-        else if (totalScore >= 19 && totalScore <= 24)
+        else if (TotalScore >= 19 && TotalScore <= 24)
         {
             result = "Високий";
         }
-        else if (totalScore >= 25 && totalScore <= 39)
+        else if (TotalScore >= 25 && TotalScore <= 39)
         {
             result = "Дуже високий";
         }

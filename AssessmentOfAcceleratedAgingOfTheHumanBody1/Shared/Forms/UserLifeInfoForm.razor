@@ -1,75 +1,65 @@
 ﻿@using AssessmentOfAcceleratedAgingOfTheHumanBody1.Models.User
 @using Microsoft.AspNetCore.Components.Forms
 
-<EditForm Model="@results" OnValidSubmit="@HandleValidSubmit">
+<EditForm Model="@Results" OnValidSubmit="@HandleValidSubmit">
     <DataAnnotationsValidator />
 
     <div class="form-group">
         <label for="BodyMassIndex">Body Mass Index:</label>
-        <InputNumber id="BodyMassIndex" @bind-Value="@results.BodyMassIndex" class="form-control" />
+        <InputNumber id="BodyMassIndex" @bind-Value="@Results.BodyMassIndex" class="form-control" />
     </div>
 
     <div class="form-group">
         <label for="BloodPressure">Blood Pressure:</label>
-        <InputText id="BloodPressure" @bind-Value="@results.BloodPressure" class="form-control" pattern="\d{2,3}/\d{2,3}" title="Please enter in the format 'upper/lower'" oninput="this.value = this.value.replace(/[^0-9/]/g, '')" />
+        <InputText id="BloodPressure" @bind-Value="@Results.BloodPressure" class="form-control" pattern="\d{2,3}/\d{2,3}" title="Please enter in the format 'upper/lower'" oninput="this.value = this.value.replace(/[^0-9/]/g, '')" />
         <small id="BloodPressureHelp" class="form-text text-muted">Enter in the format 'upper/lower'.</small>
     </div>
 
     <div class="form-group">
         <label for="WaistCircumference">Waist Circumference:</label>
-        <InputNumber id="WaistCircumference" @bind-Value="@results.WaistCircumference" class="form-control" />
+        <InputNumber id="WaistCircumference" @bind-Value="@Results.WaistCircumference" class="form-control" />
     </div>
 
     <div class="form-group">
         <label for="HeartRate">Heart Rate:</label>
-        <InputNumber id="HeartRate" @bind-Value="@results.HeartRate" class="form-control" />
+        <InputNumber id="HeartRate" @bind-Value="@Results.HeartRate" class="form-control" />
     </div>
 
     <div class="form-group">
         <label for="SleepTime">Sleep Time:</label>
-        <InputNumber id="SleepTime" @bind-Value="@results.SleepTime" class="form-control" />
+        <InputNumber id="SleepTime" @bind-Value="@Results.SleepTime" class="form-control" />
     </div>
 
     <div class="form-group">
         <label for="CircadianRhythms">Circadian Rhythms:</label>
-        <InputCheckbox id="CircadianRhythms" @bind-Value="@results.CircadianRhythms" class="form-check" />
+        <InputCheckbox id="CircadianRhythms" @bind-Value="@Results.CircadianRhythms" class="form-check" />
     </div>
 
     <div class="form-group">
         <label for="NumberOfHoursSitting">Number Of Hours Sitting:</label>
-        <InputNumber id="NumberOfHoursSitting" @bind-Value="@results.NumberOfHoursSitting" class="form-control" />
+        <InputNumber id="NumberOfHoursSitting" @bind-Value="@Results.NumberOfHoursSitting" class="form-control" />
     </div>
 
     <div class="form-group">
         <label for="NumberOfCigarettesSmokedPerDay">Number Of Cigarettes Smoked Per Day:</label>
-        <InputNumber id="NumberOfCigarettesSmokedPerDay" @bind-Value="@results.NumberOfCigarettesSmokedPerDay" class="form-control" />
+        <InputNumber id="NumberOfCigarettesSmokedPerDay" @bind-Value="@Results.NumberOfCigarettesSmokedPerDay" class="form-control" />
     </div>
 
     <div class="form-group">
         <label for="AmountOfAlcoholDrunkPerDay">Amount Of Alcohol Drunk Per Day:</label>
-        <InputNumber id="AmountOfAlcoholDrunkPerDay" @bind-Value="@results.AmountOfAlcoholDrunkPerDay" class="form-control" />
+        <InputNumber id="AmountOfAlcoholDrunkPerDay" @bind-Value="@Results.AmountOfAlcoholDrunkPerDay" class="form-control" />
     </div>
 
     <div class="form-group">
         <label for="NumberOfMeals">Number Of Meals:</label>
-        <InputNumber id="NumberOfMeals" @bind-Value="@results.NumberOfMeals" class="form-control" />
-    </div>
-
-    <div class="form-group">
-        <label for="ResultsOfTheQualityOfLifeQuestionnaire">Results Of The Quality Of Life Questionnaire:</label>
-        <InputNumber id="ResultsOfTheQualityOfLifeQuestionnaire" @bind-Value="@results.ResultsOfTheQualityOfLifeQuestionnaire" class="form-control" />
-    </div>
-
-    <div class="form-group">
-        <label for="ResultsOfThePTSDQuestionnaire">Results Of The PTSD Questionnaire:</label>
-        <InputNumber id="ResultsOfThePTSDQuestionnaire" @bind-Value="@results.ResultsOfThePTSDQuestionnaire" class="form-control" />
+        <InputNumber id="NumberOfMeals" @bind-Value="@Results.NumberOfMeals" class="form-control" />
     </div>
 
     <button type="submit" class="btn btn-primary">Submit</button>
 </EditForm>
 
 @code {
-    private ResultsModel results = new ResultsModel();
+    [Parameter] public ResultsModel Results { get; set; } = new ResultsModel();
     private int upperPressure;
     private int lowerPressure;
 
@@ -88,23 +78,21 @@
 
     private bool AllFieldsFilled()
     {
-        return !string.IsNullOrWhiteSpace(results.BloodPressure) &&
-               results.BodyMassIndex != 0 &&
-               results.WaistCircumference != 0 &&
-               results.HeartRate != 0 &&
-               results.SleepTime != 0 &&
-               results.NumberOfHoursSitting != 0 &&
-               results.NumberOfMeals != 0 &&
-               results.ResultsOfTheQualityOfLifeQuestionnaire != 0 &&
-               results.ResultsOfThePTSDQuestionnaire != 0;
+        return !string.IsNullOrWhiteSpace(Results.BloodPressure) &&
+               Results.BodyMassIndex != 0 &&
+               Results.WaistCircumference != 0 &&
+               Results.HeartRate != 0 &&
+               Results.SleepTime != 0 &&
+               Results.NumberOfHoursSitting != 0 &&
+               Results.NumberOfMeals != 0;
     }
 
     private bool IsValidPressures()
     {
-        if (string.IsNullOrWhiteSpace(results.BloodPressure))
+        if (string.IsNullOrWhiteSpace(Results.BloodPressure))
             return false;
 
-        string[] parts = results.BloodPressure.Split('/');
+        string[] parts = Results.BloodPressure.Split('/');
         if (parts.Length != 2)
             return false;
 
