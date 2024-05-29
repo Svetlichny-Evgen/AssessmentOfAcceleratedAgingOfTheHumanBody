@@ -20,6 +20,14 @@
             if (response.ok) {
                 location.href = '/';
             }
+        },
+        signOut: async function () {
+            const response = await fetch('/api/auth/logout', {
+                method: 'POST'
+            });
+            if (response.ok) {
+                location.href = '/'; // Перенаправление пользователя на главную страницу после выхода
+            }
         }
     };
 </script>

@@ -1,29 +1,79 @@
-﻿<div class="header-area">
+﻿@using AssessmentOfAcceleratedAgingOfTheHumanBody1.Authentication
+@using System.Security.Claims
+@inject IJSRuntime js
+@inject AuthService AuthService
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ILogger<IndexHeader> Logger
 
+
+<div class="header-area">
     <div class="header">
-
         <div class="title">
             <p>Визначення прискореного старіння організму людини</p>
         </div>
 
         <div class="header-items">
-
             <div class="header-item">
                 <a href="#">Про нас</a>
             </div>
 
-            <div class="header-item">
-                <a href="/login">Вхід</a>
-            </div>
-
-            <div class="header-item">
-                <a href="/register">Реєстрація</a>
-            </div>
-
+            @if (userAuthenticated)
+            {
+                <div class="header-item">
+                    <a>@currentUser.Name</a>
+                </div>
+                <div class="header-item">
+                    <button @onclick="Logout">Вихід</button>
+                </div>
+            }
+            else
+            {
+                <div class="header-item">
+                    <a href="/login">Вхід</a>
+                </div>
+                <div class="header-item">
+                    <a href="/register">Реєстрація</a>
+                </div>
+            }
         </div>
     </div>
 </div>
 
 @code {
+    private UserInfo currentUser;
+    private bool userAuthenticated;
 
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            currentUser = new UserInfo
+                {
+                    Name = user.Identity.Name, // Или любое другое свойство, содержащее имя пользователя
+                    Email = user.FindFirst(c => c.Type == ClaimTypes.Email)?.Value
+                };
+            userAuthenticated = true;
+        }
+        else
+        {
+            userAuthenticated = false;
+        }
+    }
+
+    public async Task Logout()
+    {
+        await js.InvokeVoidAsync("BlazorAuth.signOut");
+    }
+
+
+    public class UserInfo
+    {
+        public string Name { get; set; }
+        public string Email { get; set; }
+    }
 }

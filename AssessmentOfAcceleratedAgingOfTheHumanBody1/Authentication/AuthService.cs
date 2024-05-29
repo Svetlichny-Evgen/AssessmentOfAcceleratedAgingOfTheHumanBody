@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
+using System.Net.Http;
 
 namespace AssessmentOfAcceleratedAgingOfTheHumanBody1.Authentication
 {
@@ -9,11 +10,13 @@ namespace AssessmentOfAcceleratedAgingOfTheHumanBody1.Authentication
     {
         private readonly IAccauntRepository _accountRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly HttpClient _httpClient;
 
-        public AuthService(IAccauntRepository accountRepository, IHttpContextAccessor httpContextAccessor)
+        public AuthService(IAccauntRepository accountRepository, IHttpContextAccessor httpContextAccessor, HttpClient httpClient)
         {
             _accountRepository = accountRepository;
             _httpContextAccessor = httpContextAccessor;
+            _httpClient = httpClient;
         }
 
         public async Task<LoginResult> LoginAsync(string email, string password)
@@ -43,12 +46,8 @@ namespace AssessmentOfAcceleratedAgingOfTheHumanBody1.Authentication
 
         public async Task LogoutAsync()
         {
-            var authProperties = new AuthenticationProperties
-            {
-                RedirectUri = "/login" // Перенаправляем пользователя на страницу входа после выхода
-            };
-
-            await _httpContextAccessor.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme, authProperties);
+            var response = await _httpClient.PostAsync("/api/auth/logout", null);
+            response.EnsureSuccessStatusCode();
         }
     }
 

@@ -31,11 +31,14 @@ namespace AssessmentOfAcceleratedAgingOfTheHumanBody1
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            .AddCookie(options =>
-            {
-                options.LoginPath = "/login";
-                options.AccessDeniedPath = "/accessdenied";
-            });
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/login";
+                    options.AccessDeniedPath = "/accessdenied";
+                    options.LogoutPath = "/logout";
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                });
 
             builder.Services.AddScoped<IAccauntRepository, AccauntRepository>();
             builder.Services.AddScoped<AuthService>();
@@ -49,10 +52,6 @@ namespace AssessmentOfAcceleratedAgingOfTheHumanBody1
                 BaseAddress = new Uri(builder.Configuration.GetValue<string>("BaseAddress") ?? builder.Configuration["https://localhost:5001/"])
             });
 
-            builder.Services.AddAuthorization(options =>
-            {
-                options.AddPolicy("Authenticated", policy => policy.RequireAuthenticatedUser());
-            });
             builder.Services.AddAuthorization(options =>
             {
                 options.AddPolicy("Authenticated", policy => policy.RequireAuthenticatedUser());
@@ -105,10 +104,14 @@ namespace AssessmentOfAcceleratedAgingOfTheHumanBody1
                 return Results.Ok();
             });
 
-
+            app.MapPost("/api/auth/logout", async (HttpContext context) =>
+            {
+                await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                context.Response.Cookies.Delete(CookieAuthenticationDefaults.CookiePrefix);
+                return Results.Ok();
+            });
 
             app.Run();
-
         }
     }
 }
