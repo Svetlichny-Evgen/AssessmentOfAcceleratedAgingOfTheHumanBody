@@ -6,3 +6,20 @@
 }
 
 <component type="typeof(App)" render-mode="ServerPrerendered" />
+
+<script>
+    window.BlazorAuth = {
+        signIn: async function (userInfo) {
+            const response = await fetch('/api/auth/signin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userInfo)
+            });
+            if (response.ok) {
+                location.href = '/';
+            }
+        }
+    };
+</script>

@@ -12,6 +12,9 @@ using Microsoft.Extensions.Configuration;
 using System;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using AssessmentOfAcceleratedAgingOfTheHumanBody1.Models.User;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
 
 namespace AssessmentOfAcceleratedAgingOfTheHumanBody1
 {
@@ -28,11 +31,11 @@ namespace AssessmentOfAcceleratedAgingOfTheHumanBody1
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options =>
-                {
-                    options.LoginPath = "/login";
-                    options.AccessDeniedPath = "/accessdenied";
-                });
+            .AddCookie(options =>
+            {
+                options.LoginPath = "/login";
+                options.AccessDeniedPath = "/accessdenied";
+            });
 
             builder.Services.AddScoped<IAccauntRepository, AccauntRepository>();
             builder.Services.AddScoped<AuthService>();
@@ -46,7 +49,37 @@ namespace AssessmentOfAcceleratedAgingOfTheHumanBody1
                 BaseAddress = new Uri(builder.Configuration.GetValue<string>("BaseAddress") ?? builder.Configuration["https://localhost:5001/"])
             });
 
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Authenticated", policy => policy.RequireAuthenticatedUser());
+            });
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Authenticated", policy => policy.RequireAuthenticatedUser());
+            });
+
             var app = builder.Build();
+
+            app.MapPost("/api/auth/signin", async (HttpContext context) =>
+            {
+                var userInfo = await context.Request.ReadFromJsonAsync<UserInfo>();
+                if (userInfo != null)
+                {
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, userInfo.Name),
+                        new Claim(ClaimTypes.Email, userInfo.Email)
+                    };
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    var authProperties = new AuthenticationProperties { IsPersistent = true };
+                    await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
+                    return Results.Ok();
+                }
+                else
+                {
+                    return Results.BadRequest();
+                }
+            });
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -57,7 +90,9 @@ namespace AssessmentOfAcceleratedAgingOfTheHumanBody1
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
             app.UseRouting();
+
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -70,14 +105,7 @@ namespace AssessmentOfAcceleratedAgingOfTheHumanBody1
                 return Results.Ok();
             });
 
-            app.MapPost("/account/login", async (HttpContext httpContext, AuthService authService, string email, string password) =>
-            {
-                if (await authService.LoginAsync(email, password))
-                {
-                    return Results.Ok();
-                }
-                return Results.Unauthorized();
-            });
+
 
             app.Run();
 

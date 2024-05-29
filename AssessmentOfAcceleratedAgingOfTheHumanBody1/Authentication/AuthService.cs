@@ -16,31 +16,51 @@ namespace AssessmentOfAcceleratedAgingOfTheHumanBody1.Authentication
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<bool> LoginAsync(string email, string password)
+        public async Task<LoginResult> LoginAsync(string email, string password)
         {
             var account = _accountRepository.Select().FirstOrDefault(a => a.EMail == email && a.Password == password);
             if (account == null)
             {
-                return false;
+                return new LoginResult { Success = false };
             }
 
-            var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, account.FullName),
-            new Claim(ClaimTypes.Email, account.EMail)
-        };
+            var userInfo = new UserInfo
+            {
+                Name = account.FullName,
+                Email = account.EMail
+            };
 
+            return new LoginResult { Success = true, UserInfo = userInfo };
+        }
+
+        public async Task SignInAsync(List<Claim> claims)
+        {
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var authProperties = new AuthenticationProperties { IsPersistent = true };
 
             await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
-
-            return true;
         }
 
         public async Task LogoutAsync()
         {
-            await _httpContextAccessor.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            var authProperties = new AuthenticationProperties
+            {
+                RedirectUri = "/login" // Перенаправляем пользователя на страницу входа после выхода
+            };
+
+            await _httpContextAccessor.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme, authProperties);
         }
+    }
+
+    public class UserInfo
+    {
+        public string Name { get; set; }
+        public string Email { get; set; }
+    }
+
+    public class LoginResult
+    {
+        public bool Success { get; set; }
+        public UserInfo UserInfo { get; set; }
     }
 }
