@@ -22,7 +22,7 @@
             @if (userAuthenticated)
             {
                 <div class="header-item">
-                    <a>@currentUser.Name</a>
+                    <a href="/account">@currentUser.Name</a>
                 </div>
                 <div class="header-item">
                     <button @onclick="Logout">Вихід</button>

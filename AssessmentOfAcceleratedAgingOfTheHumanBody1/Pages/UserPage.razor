@@ -1,0 +1,116 @@
+﻿@page "/account"
+@using AssessmentOfAcceleratedAgingOfTheHumanBody1.Authentication
+@using AssessmentOfAcceleratedAgingOfTheHumanBody1.DAL.Interfaces
+@using AssessmentOfAcceleratedAgingOfTheHumanBody1.Models.User
+@using AssessmentOfAcceleratedAgingOfTheHumanBody1.Enums
+@using System.Security.Claims
+@inject IJSRuntime js
+@inject AuthService AuthService
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ILogger<IndexHeader> Logger
+@inject IAccauntRepository AccountRepository
+
+<h3>Account Information</h3>
+
+@if (userAuthenticated && currentUser != null)
+{
+    <div>
+        <p><strong>Name:</strong> @currentUser.FullName</p>
+        <p><strong>Email:</strong> @currentUser.EMail</p>
+        <p><strong>Birthday:</strong> @currentUser.Birthday.ToShortDateString()</p>
+        <p><strong>Sex:</strong> @(currentUser.Sex == Sex.Male ? "Мужчина" : "Женщина")</p>
+
+        @if (isEditingPassword)
+        {
+            <EditForm Model="this" OnValidSubmit="ChangePassword">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <p>
+                    <label for="newPassword"><strong>New Password:</strong></label>
+                    <InputText id="newPassword" @bind-Value="newPassword" type="password" />
+                </p>
+                <p>
+                    <label for="confirmPassword"><strong>Confirm Password:</strong></label>
+                    <InputText id="confirmPassword" @bind-Value="confirmPassword" type="password" />
+                </p>
+                <button type="submit">Save Password</button>
+                <button type="button" @onclick="CancelEditPassword">Cancel</button>
+            </EditForm>
+        }
+        else
+        {
+            <p><strong>Password:</strong> @passwordDisplay</p>
+            <button @onclick="TogglePasswordVisibility">@buttonText</button>
+            <button @onclick="EditPassword">Change Password</button>
+        }
+    </div>
+}
+else
+{
+    <p>User is not authenticated</p>
+}
+
+@code {
+    private AccountModel currentUser;
+    private bool userAuthenticated;
+    private bool isPasswordVisible = false;
+    private bool isEditingPassword = false;
+    private string newPassword;
+    private string confirmPassword;
+    private string passwordDisplay => isPasswordVisible ? currentUser.Password : new string('*', currentUser.Password.Length);
+    private string buttonText => isPasswordVisible ? "Hide Password" : "Show Password";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            var email = user.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
+            if (email != null)
+            {
+                currentUser = AccountRepository.Select().FirstOrDefault(a => a.EMail == email);
+            }
+            userAuthenticated = true;
+        }
+        else
+        {
+            userAuthenticated = false;
+        }
+    }
+
+    private void TogglePasswordVisibility()
+    {
+        isPasswordVisible = !isPasswordVisible;
+    }
+
+    private void EditPassword()
+    {
+        isEditingPassword = true;
+    }
+
+    private void CancelEditPassword()
+    {
+        isEditingPassword = false;
+        newPassword = string.Empty;
+        confirmPassword = string.Empty;
+    }
+
+    private async Task ChangePassword()
+    {
+        if (newPassword != confirmPassword)
+        {
+            await js.InvokeVoidAsync("alert", "Passwords do not match!");
+            return;
+        }
+
+        currentUser.Password = newPassword;
+        AccountRepository.Update(currentUser);
+        isEditingPassword = false;
+        newPassword = string.Empty;
+        confirmPassword = string.Empty;
+    }
+}
