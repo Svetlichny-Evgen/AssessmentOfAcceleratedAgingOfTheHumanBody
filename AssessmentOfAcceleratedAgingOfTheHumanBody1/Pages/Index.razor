@@ -1,5 +1,7 @@
 ﻿@page "/"
 @inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Index</PageTitle>
 
@@ -25,11 +27,37 @@
 </div>
 
 @code {
+    private bool userAuthenticated;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        userAuthenticated = authState.User.Identity.IsAuthenticated;
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            JSRuntime.InvokeVoidAsync("setUserAuthenticated", userAuthenticated);
+        }
+    }
 }
 
+
 <script>
+    let isAuthenticated = false;
+
+    function setUserAuthenticated(authenticated) {
+        isAuthenticated = authenticated;
+    }
+
     function showAlert() {
-        if (confirm("Данные о результатах не будут сохранены для отслеживания состояния организма. Чтобы сохранить их - войдите в аккаунт или создайте новый.\n\nПродолжить?")) {
+        if (!isAuthenticated) {
+            if (confirm("Данные о результатах не будут сохранены для отслеживания состояния организма. Чтобы сохранить их - войдите в аккаунт или создайте новый.\n\nПродолжить?")) {
+                window.location.href = "/test";
+            }
+        } else {
             window.location.href = "/test";
         }
     }

@@ -1,5 +1,8 @@
 ﻿@using System.Collections.Generic
 @using AssessmentOfAcceleratedAgingOfTheHumanBody1.Models.User
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using AssessmentOfAcceleratedAgingOfTheHumanBody1.Enums
+@using System.ComponentModel.DataAnnotations
 
 @if (currentTab < tabs.Count)
 {
@@ -10,6 +13,19 @@
                 <div class="user-life">
                     <EditForm Model="@Results" OnValidSubmit="@HandleValidSubmit">
                         <DataAnnotationsValidator />
+
+                        @if (!userAuthenticated)
+                        {
+                            <div class="form-group">
+                                <label>Sex:</label>
+                                <InputRadioGroup @bind-Value="selectedSex">
+                                    <InputRadio Value="Sex.Male" id="male" />
+                                    <label for="male">Male</label>
+                                    <InputRadio Value="Sex.Female" id="female" />
+                                    <label for="female">Female</label>
+                                </InputRadioGroup>
+                            </div>
+                        }
 
                         <div class="form-group">
                             <label for="BodyMassIndex">Body Mass Index:</label>
@@ -127,8 +143,17 @@ else
 }
 
 @code {
+    private bool userAuthenticated;
+    private ResultsModel Results = new ResultsModel();
+    private Sex selectedSex;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        userAuthenticated = authState.User.Identity.IsAuthenticated;
+    }
+
     #region UserLifeStyle
-    public ResultsModel Results { get; set; } = new ResultsModel();
     private int upperPressure;
     private int lowerPressure;
 
@@ -467,7 +492,7 @@ else
 
     public void DataPreprocessor()
     {
-        ResultsModel results = new ResultsModel()
+        Results = new ResultsModel()
         {
                 Id = new Guid(),
                 AccauntId = new AccountModel(),
@@ -481,18 +506,16 @@ else
                 NumberOfCigarettesSmokedPerDay = Results.NumberOfCigarettesSmokedPerDay,
                 AmountOfAlcoholDrunkPerDay = Results.AmountOfAlcoholDrunkPerDay,
                 NumberOfMeals = Results.NumberOfMeals,
-                ResultsOfTheQualityOfLifeQuestionnaire = yesCount1,
-                ResultsOfThePTSDQuestionnaire = TotalScore,
-                ResultOfDiagnostic = ""
-
+                ResultsOfTheQualityOfLifeQuestionnaire = TotalScore,
+                ResultsOfThePTSDQuestionnaire = yesCount1
         };
+        Results.ResultOfDiagnostic = Diagnosis(Results);
     }
 
     public void ShowAll()
     {
-
-        ResultsModel results = new ResultsModel()
-        {
+        Results = new ResultsModel()
+            {
                 Id = new Guid(),
                 AccauntId = new AccountModel(),
                 BodyMassIndex = Results.BodyMassIndex,
@@ -506,30 +529,146 @@ else
                 AmountOfAlcoholDrunkPerDay = Results.AmountOfAlcoholDrunkPerDay,
                 NumberOfMeals = Results.NumberOfMeals,
                 ResultsOfTheQualityOfLifeQuestionnaire = yesCount1,
-                ResultsOfThePTSDQuestionnaire = TotalScore,
-                ResultOfDiagnostic = ""
+                ResultsOfThePTSDQuestionnaire = TotalScore
         };
+        Results.ResultOfDiagnostic = Diagnosis(Results);
 
         Console.WriteLine("**Results Summary**");
-        Console.WriteLine($"ID: {results.Id}");  // Interpolated string for clarity
-        Console.WriteLine($"Body Mass Index (BMI): {results.BodyMassIndex}");
-        Console.WriteLine($"Blood Pressure: {results.BloodPressure}");
-        Console.WriteLine($"Waist Circumference: {results.WaistCircumference} cm");
-        Console.WriteLine($"Heart Rate: {results.HeartRate} bpm");
-        Console.WriteLine($"Sleep Time: {results.SleepTime}");
-        Console.WriteLine($"Circadian Rhythms: {results.CircadianRhythms}");
-        Console.WriteLine($"Number of Hours Sitting: {results.NumberOfHoursSitting}");
-        Console.WriteLine($"Number of Cigarettes Smoked Per Day: {results.NumberOfCigarettesSmokedPerDay}");
-        Console.WriteLine($"Amount of Alcohol Drunk Per Day: {results.AmountOfAlcoholDrunkPerDay} units");  // Add unit (optional)
-        Console.WriteLine($"Number of Meals: {results.NumberOfMeals}");
-        Console.WriteLine($"Results of Quality of Life Questionnaire: {results.ResultsOfTheQualityOfLifeQuestionnaire}");  // Corrected typo
-        Console.WriteLine($"Results of PTSD Questionnaire: {results.ResultsOfThePTSDQuestionnaire}");
-        Console.WriteLine($"Result of Diagnostic: {results.ResultOfDiagnostic}");
+        Console.WriteLine($"ID: {Results.Id}");
+        Console.WriteLine($"Body Mass Index (BMI): {Results.BodyMassIndex}");
+        Console.WriteLine($"Blood Pressure: {Results.BloodPressure}");
+        Console.WriteLine($"Waist Circumference: {Results.WaistCircumference} cm");
+        Console.WriteLine($"Heart Rate: {Results.HeartRate} bpm");
+        Console.WriteLine($"Sleep Time: {Results.SleepTime}");
+        Console.WriteLine($"Circadian Rhythms: {Results.CircadianRhythms}");
+        Console.WriteLine($"Number of Hours Sitting: {Results.NumberOfHoursSitting}");
+        Console.WriteLine($"Number of Cigarettes Smoked Per Day: {Results.NumberOfCigarettesSmokedPerDay}");
+        Console.WriteLine($"Amount of Alcohol Drunk Per Day: {Results.AmountOfAlcoholDrunkPerDay} units");
+        Console.WriteLine($"Number of Meals: {Results.NumberOfMeals}");
+        Console.WriteLine($"Results of Quality of Life Questionnaire: {Results.ResultsOfTheQualityOfLifeQuestionnaire}");
+        Console.WriteLine($"Results of PTSD Questionnaire: {Results.ResultsOfThePTSDQuestionnaire}");
+        Console.WriteLine($"Result of Diagnostic: {Results.ResultOfDiagnostic}");
 
-        // Add a blank line for better presentation:
         Console.WriteLine();
     }
 
+    #region Coding of results
+    public bool X1(double imt) => imt > 29.9;
+    public bool X2(string bloodPressure) =>
+        int.TryParse(bloodPressure.Split('/')[0], out int systolic) &&
+        int.TryParse(bloodPressure.Split('/')[1], out int diastolic) &&
+        (systolic > 120 || diastolic > 80);
+    public bool X3(double waistCircumference, Sex sex) => sex == Sex.Male ? waistCircumference > 102 : waistCircumference > 88;
+    public bool X4(int heartRate) => heartRate > 75;
+    public bool X5(int hoursOfSleep) => hoursOfSleep < 7;
+    public bool X6(bool circadianRhythms) => circadianRhythms;
+    public bool X7(int sleepTime, int sittingHours) => sittingHours <= ((24 - sleepTime) / 2);
+    public bool X8(int countOfCigarets) => countOfCigarets > 10;
+    public bool X9(int amountOfAlcohol) => amountOfAlcohol > 200;
+    public bool X10(int countOfMeals) => countOfMeals < 3;
+    public bool X11(int result) => result > 18;
+    public bool X12(int result) => result > 4;   
+    #endregion
 
+    public string Diagnosis(ResultsModel results)
+    {
+    if (
+    !X1(Results.BodyMassIndex) &&
+    !X2(Results.BloodPressure) &&
+    !X3(Results.WaistCircumference, selectedSex) &&
+    !X4(Results.HeartRate) &&
+    (
+    X5(Results.SleepTime) ||
+    (!X5(Results.SleepTime) && X6(Results.CircadianRhythms)) ||
+    (!X6(Results.CircadianRhythms) && X7(Results.SleepTime, Results.NumberOfHoursSitting)) ||
+        (!X7(Results.SleepTime, Results.NumberOfHoursSitting))
+        ) &&
+        !X8(Results.NumberOfCigarettesSmokedPerDay) &&
+    !X9(Results.AmountOfAlcoholDrunkPerDay) &&
+    !X10(Results.NumberOfMeals) &&
+    !X11(Results.ResultsOfTheQualityOfLifeQuestionnaire) &&
+    !X12(Results.ResultsOfThePTSDQuestionnaire)
+    )
+    {
+        return "Ви маєте низький ризик кардіометаболічних захворювань. Ви потребуєте моніторування ФР 1 раз на 12 місяців";
+    }
+    else if (
+     !X1(Results.BodyMassIndex) &&
+    !X2(Results.BloodPressure) &&
+    !X3(Results.WaistCircumference, selectedSex) &&
+    !X4(Results.HeartRate) || X4(Results.HeartRate) &&
+    !X5(Results.SleepTime) && !X6(Results.CircadianRhythms) &&
+    !X7(Results.SleepTime, Results.NumberOfHoursSitting) && X8(Results.NumberOfCigarettesSmokedPerDay) &&
+    X9(Results.AmountOfAlcoholDrunkPerDay) && !X10(Results.NumberOfMeals) && X11(Results.ResultsOfTheQualityOfLifeQuestionnaire) &&
+    X12(Results.ResultsOfThePTSDQuestionnaire)
+
+    )
+             {
+            return "Ви маєте низький ризик кардіометаболічних захворювань. Ви потребуєте моніторування ФР 1 раз на 12 місяців та корекцію способу життя";
+    }
+    else if (
+    !X1(Results.BodyMassIndex) && X2(Results.BloodPressure) &&
+    !X3(Results.WaistCircumference, selectedSex) && !X4(Results.HeartRate) &&
+    X5(Results.SleepTime) && X6(Results.CircadianRhythms) && X7(Results.SleepTime, Results.NumberOfHoursSitting) &&
+    !X8(Results.NumberOfCigarettesSmokedPerDay) && !X9(Results.AmountOfAlcoholDrunkPerDay) || X9(Results.AmountOfAlcoholDrunkPerDay) &&
+    !X10(Results.NumberOfMeals) || X10(Results.NumberOfMeals) && X11(Results.ResultsOfTheQualityOfLifeQuestionnaire) && X12(Results.ResultsOfThePTSDQuestionnaire)
+    )
+    {
+            return "Ви маєте помірний ризик кардіометаболічних захворювань. Ви потребуєте постійного моніторування ФР 1 раз на 6 місяців";
+    }
+    else if (
+    X1(Results.BodyMassIndex) && !X2(Results.BloodPressure) && X3(Results.WaistCircumference, selectedSex) &&
+    !X4(Results.HeartRate) || X4(Results.HeartRate) && X5(Results.SleepTime) && !X6(Results.CircadianRhythms) || X6(Results.CircadianRhythms) &&
+    !X7(Results.SleepTime, Results.NumberOfHoursSitting) || X7(Results.SleepTime, Results.NumberOfHoursSitting) && X8(Results.NumberOfCigarettesSmokedPerDay) &&
+    !X9(Results.AmountOfAlcoholDrunkPerDay) || X9(Results.AmountOfAlcoholDrunkPerDay) && !X10(Results.NumberOfMeals) || X10(Results.NumberOfMeals) &&
+    X11(Results.ResultsOfTheQualityOfLifeQuestionnaire) && X12(Results.ResultsOfThePTSDQuestionnaire)
+    )
+    {
+            return "Ви маєте помірний ризик кардіометаболічних захворювань. Ви потребуєте постійного моніторування ФР 1 раз на 6 місяців та тривалого спостереження, зверніться до лікаря.";
+         }
+         else if (
+         X1(Results.BodyMassIndex) && X2(Results.BloodPressure) && X3(Results.WaistCircumference, selectedSex) &&
+         !X4(Results.HeartRate) && X5(Results.SleepTime) || !X5(Results.SleepTime) && X6(Results.CircadianRhythms) &&
+         !X7(Results.SleepTime, Results.NumberOfHoursSitting) || X7(Results.SleepTime, Results.NumberOfHoursSitting) &&
+         X8(Results.NumberOfCigarettesSmokedPerDay) && !X9(Results.AmountOfAlcoholDrunkPerDay) || X9(Results.AmountOfAlcoholDrunkPerDay) &&
+         !X10(Results.NumberOfMeals) || X10(Results.NumberOfMeals) && !X11(Results.ResultsOfTheQualityOfLifeQuestionnaire) || X11(Results.ResultsOfTheQualityOfLifeQuestionnaire) &&
+             !X12(Results.ResultsOfThePTSDQuestionnaire) || X12(Results.ResultsOfThePTSDQuestionnaire)
+             )
+             {
+            return "Ви маєте високий ризик кардіометаболічних захворювань. Ви потребуєте постійного моніторування ФР 1 раз на 3 місяці";
+             }
+             else if (
+             X1(Results.BodyMassIndex) && !X2(Results.BloodPressure) && X3(Results.WaistCircumference, selectedSex) &&
+    X4(Results.HeartRate) && X5(Results.SleepTime) && X6(Results.CircadianRhythms) && X7(Results.SleepTime, Results.NumberOfHoursSitting) &&
+    X8(Results.NumberOfCigarettesSmokedPerDay) && X9(Results.AmountOfAlcoholDrunkPerDay) &&
+    X10(Results.NumberOfMeals) && X11(Results.ResultsOfTheQualityOfLifeQuestionnaire) && X12(Results.ResultsOfThePTSDQuestionnaire)
+    )
+    {
+            return "Ви маєте високий ризик кардіометаболічних захворювань. Ви потребуєте постійного моніторування ФР 1 раз на 3 місяці та негайного до обстеження, зверніться до лікаря";
+    }
+    else if (
+    X1(Results.BodyMassIndex) && !X2(Results.BloodPressure) && X3(Results.WaistCircumference, selectedSex) &&
+    X4(Results.HeartRate) && X5(Results.SleepTime) && X6(Results.CircadianRhythms) && 
+    X7(Results.SleepTime, Results.NumberOfHoursSitting) && !X8(Results.NumberOfCigarettesSmokedPerDay) || X8(Results.NumberOfCigarettesSmokedPerDay) &&
+    !X9(Results.AmountOfAlcoholDrunkPerDay) || X9(Results.AmountOfAlcoholDrunkPerDay) && !X10(Results.NumberOfMeals) &&
+    !X11(Results.ResultsOfTheQualityOfLifeQuestionnaire) && !X12(Results.ResultsOfThePTSDQuestionnaire)
+    )
+    {
+            return "Ви маєте дуже високий ризик кардіометаболічних захворювань. Ви потребуєте негайного і ретельного дообстеження";
+    }
+    else if (
+    X1(Results.BodyMassIndex) && X2(Results.BloodPressure) && X3(Results.WaistCircumference, selectedSex) &&
+    X4(Results.HeartRate) && X5(Results.SleepTime) && X6(Results.CircadianRhythms) &&
+    X7(Results.SleepTime, Results.NumberOfHoursSitting) && X8(Results.NumberOfCigarettesSmokedPerDay) &&
+    X9(Results.AmountOfAlcoholDrunkPerDay) && X10(Results.NumberOfMeals) &&
+    X11(Results.ResultsOfTheQualityOfLifeQuestionnaire) && X12(Results.ResultsOfThePTSDQuestionnaire)
+    )
+    {
+            return "Ви маєте дуже високий ризик кардіометаболічних захворювань. Ви потребуєте негайного і ретельного дообстеження, зверніться до лікаря";
+
+         } 
+        
+        return "Діагноз не визначений";
+    }
     #endregion
 }
