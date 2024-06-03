@@ -120,7 +120,10 @@ else
             if (email != null)
             {
                 currentUser = AccountRepository.Select().FirstOrDefault(a => a.EMail == email);
-                testResults = ResultsRepository.Select().ToList();
+                if (currentUser != null)
+                {
+                    testResults = ResultsRepository.Select().Where(a => a.AccauntId == currentUser).ToList();
+                }
             }
             userAuthenticated = true;
         }
