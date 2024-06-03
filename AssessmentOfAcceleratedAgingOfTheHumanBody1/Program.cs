@@ -41,10 +41,12 @@ namespace AssessmentOfAcceleratedAgingOfTheHumanBody1
                 });
 
             builder.Services.AddScoped<IAccauntRepository, AccauntRepository>();
+            builder.Services.AddScoped<IResultsRepository, ResultsRepository>();
             builder.Services.AddScoped<AuthService>();
             builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddAuthorizationCore();
+            builder.Services.AddScoped<ResultsService>();
 
             // Register HttpClient with BaseAddress
             builder.Services.AddScoped(sp => new HttpClient

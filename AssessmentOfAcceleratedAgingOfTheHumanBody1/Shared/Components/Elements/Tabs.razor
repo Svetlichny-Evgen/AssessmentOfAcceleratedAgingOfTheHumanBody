@@ -1,8 +1,22 @@
 ﻿@using System.Collections.Generic
+@using AssessmentOfAcceleratedAgingOfTheHumanBody1.DAL.Repositories
 @using AssessmentOfAcceleratedAgingOfTheHumanBody1.Models.User
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @using AssessmentOfAcceleratedAgingOfTheHumanBody1.Enums
 @using System.ComponentModel.DataAnnotations
+
+@using AssessmentOfAcceleratedAgingOfTheHumanBody1.Authentication
+@using AssessmentOfAcceleratedAgingOfTheHumanBody1.DAL.Interfaces
+@using System.Security.Claims
+@inject IJSRuntime js
+@inject AuthService AuthService
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ILogger<IndexHeader> Logger
+@inject IAccauntRepository AccountRepository
+@inject IResultsRepository ResultsRepository
+@inject ResultsService ResultsService
 
 @if (currentTab < tabs.Count)
 {
@@ -117,15 +131,12 @@
                                            SelectedOptionChanged="@((string value) => HandleSelectedOptionChanged2(question, value))" />
                         <br />
                     }
-                    <button @onclick="SubmitSurvey">Отправить</button>
-                    <p>Кількість балів: @TotalScore</p>
-                    <p>Рівень якості життя: @result</p>
                 </div>
                 @if (!allQuestionsAnswered2)
                 {
                     <p style="color: red;">Вам необходимо ответить на все вопросы</p>
                 }
-                <button @onclick="ShowAll" disabled="@(!allQuestionsAnswered2)">Далі</button>
+                <button @onclick="DataPreprocessor" disabled="@(!allQuestionsAnswered2)">Далі</button>
                 break;
 
             default:
@@ -144,6 +155,7 @@ else
 
 @code {
     private bool userAuthenticated;
+    private AccountModel currentUser;
     private ResultsModel Results = new ResultsModel();
     private Sex selectedSex;
 
@@ -151,6 +163,22 @@ else
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         userAuthenticated = authState.User.Identity.IsAuthenticated;
+
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            var email = user.FindFirst(c => c.Type == ClaimTypes.Email)?.Value;
+            if (email != null)
+            {
+                currentUser = AccountRepository.Select().FirstOrDefault(a => a.EMail == email);
+            }
+            userAuthenticated = true;
+        }
+        else
+        {
+            userAuthenticated = false;
+        }
     }
 
     #region UserLifeStyle
@@ -450,24 +478,8 @@ else
     private void SubmitSurvey()
     {
         TotalScore = Questions2.Sum(q => int.Parse(q.SelectedOption));
-        DetermineQualityOfLife();
     }
 
-    private void DetermineQualityOfLife()
-    {
-        if (TotalScore <= 12)
-        {
-            result = "High";
-        }
-        else if (TotalScore <= 20)
-        {
-            result = "Medium";
-        }
-        else
-        {
-            result = "Low";
-        }
-    }
     #endregion
 
     #region TabNavigation
@@ -492,10 +504,13 @@ else
 
     public void DataPreprocessor()
     {
+        DateTime createdAt = DateTime.Now;
+        SubmitSurvey();
         Results = new ResultsModel()
-        {
-                Id = new Guid(),
-                AccauntId = new AccountModel(),
+            {
+                Id = Guid.NewGuid(),
+                AccauntId = currentUser,  // Use currentUser as the account reference
+                CreatedAt = createdAt.ToString("dd-MM-YYYY"),
                 BodyMassIndex = Results.BodyMassIndex,
                 BloodPressure = Results.BloodPressure,
                 WaistCircumference = Results.WaistCircumference,
@@ -508,48 +523,37 @@ else
                 NumberOfMeals = Results.NumberOfMeals,
                 ResultsOfTheQualityOfLifeQuestionnaire = TotalScore,
                 ResultsOfThePTSDQuestionnaire = yesCount1
-        };
-        Results.ResultOfDiagnostic = Diagnosis(Results);
-    }
-
-    public void ShowAll()
-    {
-        Results = new ResultsModel()
-            {
-                Id = new Guid(),
-                AccauntId = new AccountModel(),
-                BodyMassIndex = Results.BodyMassIndex,
-                BloodPressure = Results.BloodPressure,
-                WaistCircumference = Results.WaistCircumference,
-                HeartRate = Results.HeartRate,
-                SleepTime = Results.SleepTime,
-                CircadianRhythms = Results.CircadianRhythms,
-                NumberOfHoursSitting = Results.NumberOfHoursSitting,
-                NumberOfCigarettesSmokedPerDay = Results.NumberOfCigarettesSmokedPerDay,
-                AmountOfAlcoholDrunkPerDay = Results.AmountOfAlcoholDrunkPerDay,
-                NumberOfMeals = Results.NumberOfMeals,
-                ResultsOfTheQualityOfLifeQuestionnaire = yesCount1,
-                ResultsOfThePTSDQuestionnaire = TotalScore
-        };
+            };
         Results.ResultOfDiagnostic = Diagnosis(Results);
 
-        Console.WriteLine("**Results Summary**");
-        Console.WriteLine($"ID: {Results.Id}");
-        Console.WriteLine($"Body Mass Index (BMI): {Results.BodyMassIndex}");
-        Console.WriteLine($"Blood Pressure: {Results.BloodPressure}");
-        Console.WriteLine($"Waist Circumference: {Results.WaistCircumference} cm");
-        Console.WriteLine($"Heart Rate: {Results.HeartRate} bpm");
-        Console.WriteLine($"Sleep Time: {Results.SleepTime}");
-        Console.WriteLine($"Circadian Rhythms: {Results.CircadianRhythms}");
-        Console.WriteLine($"Number of Hours Sitting: {Results.NumberOfHoursSitting}");
-        Console.WriteLine($"Number of Cigarettes Smoked Per Day: {Results.NumberOfCigarettesSmokedPerDay}");
-        Console.WriteLine($"Amount of Alcohol Drunk Per Day: {Results.AmountOfAlcoholDrunkPerDay} units");
-        Console.WriteLine($"Number of Meals: {Results.NumberOfMeals}");
-        Console.WriteLine($"Results of Quality of Life Questionnaire: {Results.ResultsOfTheQualityOfLifeQuestionnaire}");
-        Console.WriteLine($"Results of PTSD Questionnaire: {Results.ResultsOfThePTSDQuestionnaire}");
-        Console.WriteLine($"Result of Diagnostic: {Results.ResultOfDiagnostic}");
-
-        Console.WriteLine();
+        if (userAuthenticated)
+        {
+            ResultsRepository.Create(Results);
+        }
+        else
+        {
+            Results = new ResultsModel()
+                {
+                    Id = Guid.NewGuid(),
+                    AccauntId = null,
+                    CreatedAt = createdAt.ToString("dd-mm-yyyy"),
+                    BodyMassIndex = Results.BodyMassIndex,
+                    BloodPressure = Results.BloodPressure,
+                    WaistCircumference = Results.WaistCircumference,
+                    HeartRate = Results.HeartRate,
+                    SleepTime = Results.SleepTime,
+                    CircadianRhythms = Results.CircadianRhythms,
+                    NumberOfHoursSitting = Results.NumberOfHoursSitting,
+                    NumberOfCigarettesSmokedPerDay = Results.NumberOfCigarettesSmokedPerDay,
+                    AmountOfAlcoholDrunkPerDay = Results.AmountOfAlcoholDrunkPerDay,
+                    NumberOfMeals = Results.NumberOfMeals,
+                    ResultsOfTheQualityOfLifeQuestionnaire = TotalScore,
+                    ResultsOfThePTSDQuestionnaire = yesCount1
+                };
+        }
+        Results.ResultOfDiagnostic = Diagnosis(Results);
+        ResultsService.Results = Results;
+        NavigationManager.NavigateTo("/result");
     }
 
     #region Coding of results

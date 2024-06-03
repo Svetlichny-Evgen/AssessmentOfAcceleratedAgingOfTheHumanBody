@@ -11,6 +11,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ILogger<IndexHeader> Logger
 @inject IAccauntRepository AccountRepository
+@inject IResultsRepository ResultsRepository
 
 <h3>Account Information</h3>
 
@@ -46,7 +47,51 @@
             <button @onclick="EditPassword">Change Password</button>
         }
     </div>
+    <br />
+    <h3>Tests Results</h3>
+
+    <select @onchange="FilterByDate">
+        <option value="">Все даты</option>
+        @foreach (var date in testResults.Select(r => r.CreatedAt).Distinct().OrderByDescending(d => d))
+        {
+            <option value="@date">@date</option>
+        }
+    </select>
+
+    @if (filteredResults.Any())
+    {
+        <table class="table">
+            <tbody>
+                @foreach (var result in filteredResults.OrderByDescending(r => r.CreatedAt))
+                {
+                    <tr>
+                        <td>
+                            <strong>Дата:</strong> @result.CreatedAt<br />
+                            <strong>Индекс массы тела:</strong> @result.BodyMassIndex<br />
+                            <strong>Кровяное давление:</strong> @result.BloodPressure<br />
+                            <strong>Обхват талии:</strong> @result.WaistCircumference<br />
+                            <strong>Пульс:</strong> @result.HeartRate<br />
+                            <strong>Время сна:</strong> @result.SleepTime<br />
+                            <strong>Циркадные ритмы:</strong> @(result.CircadianRhythms ? "Да" : "Нет")<br />
+                            <strong>Часов сидячего образа жизни:</strong> @result.NumberOfHoursSitting<br />
+                            <strong>Количество выкуриваемых сигарет в день:</strong> @result.NumberOfCigarettesSmokedPerDay<br />
+                            <strong>Количество выпиваемого алкоголя в день:</strong> @result.AmountOfAlcoholDrunkPerDay<br />
+                            <strong>Количество приемов пищи:</strong> @result.NumberOfMeals<br />
+                            <strong>Оценка качества жизни:</strong> @DetermineQualityOfLife(result.ResultsOfTheQualityOfLifeQuestionnaire)<br />
+                            <strong>Оценка ПТСР:</strong> @DeterminePTSR(result.ResultsOfThePTSDQuestionnaire)<br />
+                            <strong>Диагностический результат:</strong> @result.ResultOfDiagnostic<br />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Нет результатов для выбранной даты.</p>
+    }
 }
+
 else
 {
     <p>User is not authenticated</p>
@@ -61,6 +106,8 @@ else
     private string confirmPassword;
     private string passwordDisplay => isPasswordVisible ? currentUser.Password : new string('*', currentUser.Password.Length);
     private string buttonText => isPasswordVisible ? "Hide Password" : "Show Password";
+    private List<ResultsModel> filteredResults = new List<ResultsModel>();
+    private List<ResultsModel> testResults = new List<ResultsModel>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -73,6 +120,7 @@ else
             if (email != null)
             {
                 currentUser = AccountRepository.Select().FirstOrDefault(a => a.EMail == email);
+                testResults = ResultsRepository.Select().ToList();
             }
             userAuthenticated = true;
         }
@@ -112,5 +160,48 @@ else
         isEditingPassword = false;
         newPassword = string.Empty;
         confirmPassword = string.Empty;
+    }
+
+    private string DetermineQualityOfLife(int res)
+    {
+        if (res <= 12)
+        {
+            return "High";
+        }
+        else if (res <= 20)
+        {
+            return "Medium";
+        }
+        else
+        {
+            return "Low";
+        }
+    }
+
+    private string DeterminePTSR(int res)
+    {
+        if (res > 4)
+        {
+            return "You have some problems. Contact a specialist.";
+        }
+        else
+        {
+            return "Everything's normal.";
+        }
+    }
+
+    private void FilterByDate(ChangeEventArgs e)
+    {
+        string selectedDate = e.Value.ToString();
+
+        if (string.IsNullOrEmpty(selectedDate))
+        {
+            filteredResults.Clear();
+        }
+        else
+        {
+            filteredResults = testResults.Where(r => r.CreatedAt == selectedDate).OrderByDescending(r => r.CreatedAt).ToList();
+        }
+        StateHasChanged();
     }
 }

@@ -1,0 +1,61 @@
+﻿@page "/result"
+@using AssessmentOfAcceleratedAgingOfTheHumanBody1.Models.User
+@inject ResultsService ResultsService
+
+<h3>Results</h3>
+
+@if (ResultsService.Results != null)
+{
+    <p>Body Mass Index: @ResultsService.Results.BodyMassIndex</p>
+    <p>Blood Pressure: @ResultsService.Results.BloodPressure</p>
+    <p>Waist Circumference: @ResultsService.Results.WaistCircumference</p>
+    <p>Heart Rate: @ResultsService.Results.HeartRate</p>
+    <p>Sleep Time: @ResultsService.Results.SleepTime</p>
+    <p>Circadian Rhythms: @ResultsService.Results.CircadianRhythms</p>
+    <p>Number of Hours Sitting: @ResultsService.Results.NumberOfHoursSitting</p>
+    <p>Number of Cigarettes Smoked Per Day: @ResultsService.Results.NumberOfCigarettesSmokedPerDay</p>
+    <p>Amount of Alcohol Drunk Per Day: @ResultsService.Results.AmountOfAlcoholDrunkPerDay</p>
+    <p>Number of Meals: @ResultsService.Results.NumberOfMeals</p>
+    <p>Results of Quality of Life Questionnaire: @DetermineQualityOfLife(ResultsService.Results.ResultsOfTheQualityOfLifeQuestionnaire)</p>
+    <p>Results of PTSD Questionnaire: @DeterminePTSR(ResultsService.Results.ResultsOfThePTSDQuestionnaire)</p>
+    <p>Result of Diagnostic: @ResultsService.Results.ResultOfDiagnostic</p>
+}
+else
+{
+    <p>No results available.</p>
+}
+
+@code {
+    protected override void OnInitialized()
+    {
+        // Access ResultsService.Results here if needed
+    }
+
+    private string DetermineQualityOfLife(int res)
+    {
+        if (res <= 12)
+        {
+            return "High";
+        }
+        else if (res <= 20)
+        {
+            return "Medium";
+        }
+        else
+        {
+            return "Low";
+        }
+    }
+
+    private string DeterminePTSR(int res)
+    {
+        if (res > 4)
+        {
+            return "You have some problems. Contact a specialist.";
+        }
+        else 
+        {
+            return "Everything's normal.";
+        }
+    }
+}

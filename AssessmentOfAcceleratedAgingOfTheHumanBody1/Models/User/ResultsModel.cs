@@ -7,6 +7,7 @@ namespace AssessmentOfAcceleratedAgingOfTheHumanBody1.Models.User
     {
         public Guid? Id { get; set; }
         public AccountModel? AccauntId { get; set; }
+        public string? CreatedAt { get; set; }
         public double BodyMassIndex { get; set; }
         public string? BloodPressure { get; set; }
         public double WaistCircumference { get; set; }
