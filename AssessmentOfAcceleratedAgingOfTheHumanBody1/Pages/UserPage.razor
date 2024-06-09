@@ -13,15 +13,17 @@
 @inject IAccauntRepository AccountRepository
 @inject IResultsRepository ResultsRepository
 
-<h3>Account Information</h3>
+
 
 @if (userAuthenticated && currentUser != null)
 {
-    <div>
-        <p><strong>Name:</strong> @currentUser.FullName</p>
+    <div class="user-info">
+        <h2>ІНФОРМАЦІЯ ПРО ОБЛІКОВИЙ ЗАПИС КОРИСТУВАЧА</h2>
+        <br />
+        <p><strong>ПІБ:</strong> @currentUser.FullName</p>
         <p><strong>Email:</strong> @currentUser.EMail</p>
-        <p><strong>Birthday:</strong> @currentUser.Birthday.ToShortDateString()</p>
-        <p><strong>Sex:</strong> @(currentUser.Sex == Sex.Male ? "Мужчина" : "Женщина")</p>
+        <p><strong>Дата народження:</strong> @currentUser.Birthday.ToShortDateString()</p>
+        <p><strong>Стать:</strong> @(currentUser.Sex == Sex.Male ? "Чоловік" : "Жінка")</p>
 
         @if (isEditingPassword)
         {
@@ -29,29 +31,36 @@
                 <DataAnnotationsValidator />
                 <ValidationSummary />
                 <p>
-                    <label for="newPassword"><strong>New Password:</strong></label>
+                    <label for="newPassword"><strong>Новий пароль:</strong></label>
                     <InputText id="newPassword" @bind-Value="newPassword" type="password" />
                 </p>
                 <p>
-                    <label for="confirmPassword"><strong>Confirm Password:</strong></label>
+                    <label for="confirmPassword"><strong>Повторити пароль:</strong></label>
                     <InputText id="confirmPassword" @bind-Value="confirmPassword" type="password" />
                 </p>
-                <button type="submit">Save Password</button>
-                <button type="button" @onclick="CancelEditPassword">Cancel</button>
+                <button type="submit">Зберегти зміни</button>
+                <button type="button" @onclick="CancelEditPassword">Відміна</button>
             </EditForm>
         }
         else
         {
-            <p><strong>Password:</strong> @passwordDisplay</p>
-            <button @onclick="TogglePasswordVisibility">@buttonText</button>
-            <button @onclick="EditPassword">Change Password</button>
+            <div class="password-section">
+                <p><strong>Пароль:</strong> @passwordDisplay</p>
+                <div class="password-buttons">
+                    <button @onclick="TogglePasswordVisibility">@buttonText</button>
+                    <button @onclick="EditPassword">Змінити пароль</button>
+                </div>
+            </div>
         }
     </div>
-    <br />
-    <h3>Tests Results</h3>
 
+
+    <br />
+    <div class="results-form">
+    <h2>Результати тестування</h2>
+    <br />
     <select @onchange="FilterByDate">
-        <option value="">Все даты</option>
+        <option value="">Усі дати</option>
         @foreach (var date in testResults.Select(r => r.CreatedAt).Distinct().OrderByDescending(d => d))
         {
             <option value="@date">@date</option>
@@ -67,19 +76,19 @@
                     <tr>
                         <td>
                             <strong>Дата:</strong> @result.CreatedAt<br />
-                            <strong>Индекс массы тела:</strong> @result.BodyMassIndex<br />
-                            <strong>Кровяное давление:</strong> @result.BloodPressure<br />
-                            <strong>Обхват талии:</strong> @result.WaistCircumference<br />
+                            <strong>Індекс маси тіла:</strong> @result.BodyMassIndex<br />
+                            <strong>Артеріальний тиск:</strong> @result.BloodPressure<br />
+                            <strong>Обхват талії:</strong> @result.WaistCircumference<br />
                             <strong>Пульс:</strong> @result.HeartRate<br />
-                            <strong>Время сна:</strong> @result.SleepTime<br />
-                            <strong>Циркадные ритмы:</strong> @(result.CircadianRhythms ? "Да" : "Нет")<br />
-                            <strong>Часов сидячего образа жизни:</strong> @result.NumberOfHoursSitting<br />
-                            <strong>Количество выкуриваемых сигарет в день:</strong> @result.NumberOfCigarettesSmokedPerDay<br />
-                            <strong>Количество выпиваемого алкоголя в день:</strong> @result.AmountOfAlcoholDrunkPerDay<br />
-                            <strong>Количество приемов пищи:</strong> @result.NumberOfMeals<br />
-                            <strong>Оценка качества жизни:</strong> @DetermineQualityOfLife(result.ResultsOfTheQualityOfLifeQuestionnaire)<br />
-                            <strong>Оценка ПТСР:</strong> @DeterminePTSR(result.ResultsOfThePTSDQuestionnaire)<br />
-                            <strong>Диагностический результат:</strong> @result.ResultOfDiagnostic<br />
+                            <strong>Тривалість сну:</strong> @result.SleepTime<br />
+                            <strong>Циркадні ритми:</strong> @(result.CircadianRhythms ? "Дисинхроз є" : "Дисинхрозу немає")<br />
+                            <strong>Кількість годин сидячи:</strong> @result.NumberOfHoursSitting<br />
+                            <strong>Кількість викурних сигарет за добу:</strong> @result.NumberOfCigarettesSmokedPerDay<br />
+                            <strong>Кількість випитого алкоголю на добу:</strong> @result.AmountOfAlcoholDrunkPerDay<br />
+                            <strong>Кількість прийомів їжі:</strong> @result.NumberOfMeals<br />
+                            <strong>Оцінка якості життя:</strong> @DetermineQualityOfLife(result.ResultsOfTheQualityOfLifeQuestionnaire)<br />
+                            <strong>Оцінка ПТСР:</strong> @DeterminePTSR(result.ResultsOfThePTSDQuestionnaire)<br />
+                            <strong>Діагностичний результат:</strong> @result.ResultOfDiagnostic<br />
                         </td>
                     </tr>
                 }
@@ -88,8 +97,10 @@
     }
     else
     {
-        <p>Нет результатов для выбранной даты.</p>
+        <br />
+        <p>Для обраної дати результатів немає.</p>
     }
+    </div>
 }
 
 else
@@ -105,7 +116,7 @@ else
     private string newPassword;
     private string confirmPassword;
     private string passwordDisplay => isPasswordVisible ? currentUser.Password : new string('*', currentUser.Password.Length);
-    private string buttonText => isPasswordVisible ? "Hide Password" : "Show Password";
+    private string buttonText => isPasswordVisible ? "Приховати пароль" : "Показати пароль";
     private List<ResultsModel> filteredResults = new List<ResultsModel>();
     private List<ResultsModel> testResults = new List<ResultsModel>();
 
@@ -154,7 +165,7 @@ else
     {
         if (newPassword != confirmPassword)
         {
-            await js.InvokeVoidAsync("alert", "Passwords do not match!");
+            await js.InvokeVoidAsync("alert", "Паролі не співпадають!");
             return;
         }
 
@@ -169,15 +180,15 @@ else
     {
         if (res <= 12)
         {
-            return "High";
+            return "Високий рівень якості життя";
         }
         else if (res <= 20)
         {
-            return "Medium";
+            return "Середній рівень якості життя";
         }
         else
         {
-            return "Low";
+            return "Низький рівень якості життя";
         }
     }
 
@@ -185,11 +196,11 @@ else
     {
         if (res > 4)
         {
-            return "You have some problems. Contact a specialist.";
+            return "У вас є деякі проблеми. Зв'яжіться зі спеціалістом.";
         }
         else
         {
-            return "Everything's normal.";
+            return "Психічний стан в нормі.";
         }
     }
 

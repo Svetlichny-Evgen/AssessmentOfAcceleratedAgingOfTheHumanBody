@@ -54,7 +54,7 @@
         {
             currentUser = new UserInfo
                 {
-                    Name = user.Identity.Name, // Или любое другое свойство, содержащее имя пользователя
+                    Name = user.Identity.Name,
                     Email = user.FindFirst(c => c.Type == ClaimTypes.Email)?.Value
                 };
             userAuthenticated = true;

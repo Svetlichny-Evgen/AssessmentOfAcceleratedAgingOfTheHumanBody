@@ -1,1 +1,16 @@
-﻿
+﻿$text-size-large: 20px;
+
+// Применение размеров текста к элементам
+.form-group {
+    label {
+        font-size: $text-size-large; // Устанавливает размер шрифта для меток
+    }
+
+    input[type="radio"] {
+        font-size: $text-size-large; // Устанавливает размер шрифта для радио-кнопок
+    }
+
+    label {
+        font-size: $text-size-large; // Устанавливает размер шрифта для текста вопросов
+    }
+}

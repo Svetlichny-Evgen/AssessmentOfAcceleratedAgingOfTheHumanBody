@@ -67,4 +67,20 @@
     <UpToDateCheckInput Remove="Pages\Test.razor.scss" />
   </ItemGroup>
 
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\UserPage.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\LoginPage.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\RegistrationPage.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\ResultsPage.razor.scss" />
+  </ItemGroup>
+
 </Project>

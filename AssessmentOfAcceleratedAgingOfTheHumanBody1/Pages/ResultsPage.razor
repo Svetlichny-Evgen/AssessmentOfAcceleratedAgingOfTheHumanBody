@@ -2,28 +2,33 @@
 @using AssessmentOfAcceleratedAgingOfTheHumanBody1.Models.User
 @inject ResultsService ResultsService
 
-<h3>Results</h3>
 
-@if (ResultsService.Results != null)
-{
-    <p>Body Mass Index: @ResultsService.Results.BodyMassIndex</p>
-    <p>Blood Pressure: @ResultsService.Results.BloodPressure</p>
-    <p>Waist Circumference: @ResultsService.Results.WaistCircumference</p>
-    <p>Heart Rate: @ResultsService.Results.HeartRate</p>
-    <p>Sleep Time: @ResultsService.Results.SleepTime</p>
-    <p>Circadian Rhythms: @ResultsService.Results.CircadianRhythms</p>
-    <p>Number of Hours Sitting: @ResultsService.Results.NumberOfHoursSitting</p>
-    <p>Number of Cigarettes Smoked Per Day: @ResultsService.Results.NumberOfCigarettesSmokedPerDay</p>
-    <p>Amount of Alcohol Drunk Per Day: @ResultsService.Results.AmountOfAlcoholDrunkPerDay</p>
-    <p>Number of Meals: @ResultsService.Results.NumberOfMeals</p>
-    <p>Results of Quality of Life Questionnaire: @DetermineQualityOfLife(ResultsService.Results.ResultsOfTheQualityOfLifeQuestionnaire)</p>
-    <p>Results of PTSD Questionnaire: @DeterminePTSR(ResultsService.Results.ResultsOfThePTSDQuestionnaire)</p>
-    <p>Result of Diagnostic: @ResultsService.Results.ResultOfDiagnostic</p>
-}
-else
-{
-    <p>No results available.</p>
-}
+<div class="results-area">
+    <br />
+    <h2>Результати тестування</h2>
+    <br />
+
+    @if (ResultsService.Results != null)
+    {
+        <p>Індекс маси тіла: @ResultsService.Results.BodyMassIndex</p>
+        <p>Артеріальний тиск: @ResultsService.Results.BloodPressure</p>
+        <p>Обхват талії: @ResultsService.Results.WaistCircumference</p>
+        <p>Пульс: @ResultsService.Results.HeartRate</p>
+        <p>Тривалість сну: @ResultsService.Results.SleepTime</p>
+        <p>Циркадні ритми: @ResultsService.Results.CircadianRhythms</p>
+        <p>Кількість годин сидячи: @ResultsService.Results.NumberOfHoursSitting</p>
+        <p>Кількість сигарет скурених за добу: @ResultsService.Results.NumberOfCigarettesSmokedPerDay</p>
+        <p>Кількість алкоголю випитого за добу: @ResultsService.Results.AmountOfAlcoholDrunkPerDay</p>
+        <p>Кількість прийомів їжі: @ResultsService.Results.NumberOfMeals</p>
+        <p>Результат оцінки якості життя: @DetermineQualityOfLife(ResultsService.Results.ResultsOfTheQualityOfLifeQuestionnaire)</p>
+        <p>Результат оцінки ПТСР: @DeterminePTSR(ResultsService.Results.ResultsOfThePTSDQuestionnaire)</p>
+        <p>Діагноз: @ResultsService.Results.ResultOfDiagnostic</p>
+    }
+    else
+    {
+        <p>No results available.</p>
+    }
+</div>
 
 @code {
     protected override void OnInitialized()
@@ -35,15 +40,15 @@ else
     {
         if (res <= 12)
         {
-            return "High";
+            return "Високий рівень життя";
         }
         else if (res <= 20)
         {
-            return "Medium";
+            return "Середній рівень життя";
         }
         else
         {
-            return "Low";
+            return "Низький рівень життя";
         }
     }
 
@@ -51,11 +56,11 @@ else
     {
         if (res > 4)
         {
-            return "You have some problems. Contact a specialist.";
+            return "У вас є деякі проблеми. Зв'яжіться зі спеціалістом.";
         }
         else 
         {
-            return "Everything's normal.";
+            return "Психічний стан в нормі.";
         }
     }
 }

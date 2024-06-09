@@ -5,47 +5,51 @@
 @inject NavigationManager Navigation
 @inject HttpClient Http
 
-<EditForm Model="@accountModel" OnValidSubmit="@HandleRegister">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+<div class="conteiner">
+    <div class="registration-area">
+        <EditForm Model="@accountModel" OnValidSubmit="@HandleRegister">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
 
-    <div class="form-group">
-        <label for="fullName">Full Name:</label>
-        <InputText id="fullName" @bind-Value="@accountModel.FullName" class="form-control" />
-        <ValidationMessage For="@(() => accountModel.FullName)" />
+            <div class="form-group">
+                <label for="fullName">ПІБ:</label>
+                <InputText id="fullName" @bind-Value="@accountModel.FullName" class="form-control" />
+                <ValidationMessage For="@(() => accountModel.FullName)" />
+            </div>
+
+            <div class="form-group">
+                <label for="birthday">Дата народження:</label>
+                <InputDate id="birthday" @bind-Value="@accountModel.Birthday" class="form-control" />
+                <ValidationMessage For="@(() => accountModel.Birthday)" />
+            </div>
+
+            <div class="form-group">
+                <label for="sex">Стать:</label>
+                <InputSelect id="sex" @bind-Value="@accountModel.Sex" class="form-control">
+                    @foreach (var sex in Enum.GetValues(typeof(Sex)))
+                    {
+                        <option value="@sex">@GetSexString((Sex)sex)</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="@(() => accountModel.Sex)" />
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <InputText id="email" @bind-Value="@accountModel.EMail" class="form-control" />
+                <ValidationMessage For="@(() => accountModel.EMail)" />
+            </div>
+
+            <div class="form-group">
+                <label for="password">Пароль:</label>
+                <InputText id="password" @bind-Value="@accountModel.Password" class="form-control" type="password" />
+                <ValidationMessage For="@(() => accountModel.Password)" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Зареєструватися</button>
+        </EditForm>
     </div>
-
-    <div class="form-group">
-        <label for="birthday">Birthday:</label>
-        <InputDate id="birthday" @bind-Value="@accountModel.Birthday" class="form-control" />
-        <ValidationMessage For="@(() => accountModel.Birthday)" />
-    </div>
-
-    <div class="form-group">
-        <label for="sex">Sex:</label>
-        <InputSelect id="sex" @bind-Value="@accountModel.Sex" class="form-control">
-            @foreach (var sex in Enum.GetValues(typeof(Sex)))
-            {
-                <option value="@sex">@sex</option>
-            }
-        </InputSelect>
-        <ValidationMessage For="@(() => accountModel.Sex)" />
-    </div>
-
-    <div class="form-group">
-        <label for="email">Email:</label>
-        <InputText id="email" @bind-Value="@accountModel.EMail" class="form-control" />
-        <ValidationMessage For="@(() => accountModel.EMail)" />
-    </div>
-
-    <div class="form-group">
-        <label for="password">Password:</label>
-        <InputText id="password" @bind-Value="@accountModel.Password" class="form-control" type="password" />
-        <ValidationMessage For="@(() => accountModel.Password)" />
-    </div>
-
-    <button type="submit" class="btn btn-primary">Submit</button>
-</EditForm>
+</div>
 
 
 @code {
@@ -61,7 +65,20 @@
         }
         else
         {
-            errorMessage = "Registration failed.";
+            errorMessage = "Не вдалося зареєструватися.";
+        }
+    }
+
+    public string GetSexString(Sex sex)
+    {
+        switch (sex)
+        {
+            case Sex.Male:
+                return "Чоловік";
+            case Sex.Female:
+                return "Жінка";
+            default:
+                return "";
         }
     }
 }

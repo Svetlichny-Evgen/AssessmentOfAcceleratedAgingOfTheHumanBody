@@ -1,1 +1,1 @@
-{"version":3,"sourceRoot":"","sources":[],"names":[],"mappings":"","file":"QuestionComponent.razor.css"}
+{"version":3,"sourceRoot":"","sources":["QuestionComponent.razor.scss"],"names":[],"mappings":"AAII;EACI,WALU;;AAQd;EACI,WATU;;AAYd;EACI,WAbU","file":"QuestionComponent.razor.css"}

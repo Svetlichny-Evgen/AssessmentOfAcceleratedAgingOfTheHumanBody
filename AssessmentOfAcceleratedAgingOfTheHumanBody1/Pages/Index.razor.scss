@@ -10,25 +10,51 @@ $active-blue: #004080;
         margin: 25px 20% 5% 20%;
 
         .button-link {
-            display: inline-block; // Делает ссылку блочным элементом для возможности задать размеры
-            padding: 10px 20px; // Отступы для создания пространства внутри кнопки
-            background-color: $primary-blue; // Синий цвет фона
-            color: white; // Белый цвет текста
-            text-align: center; // Центрирование текста
-            text-decoration: none; // Удаление стандартного подчеркивания у ссылок
-            border: 2px solid $primary-blue; // Граница синего цвета
-            border-radius: 5px; // Скругленные углы
-            transition: background-color 0.3s, border-color 0.3s; // Плавные переходы для фонового цвета и границы
-            // Стили при наведении
+            display: block; /* Делает кнопку блочным элементом */
+            width: fit-content; /* Подгоняет ширину кнопки под содержимое */
+            margin: 0 auto; /* Автоматически центрирует кнопку по горизонтали */
+            padding: 15px 30px; /* Отступы для создания пространства внутри кнопки */
+            background-color: $primary-blue; /* Синий цвет фона */
+            color: white; /* Белый цвет текста */
+            text-align: center; /* Центрирование текста */
+            text-decoration: none; /* Удаление стандартного подчеркивания у ссылок */
+            border: 2px solid $primary-blue; /* Граница синего цвета */
+            border-radius: 5px; /* Скругленные углы */
+            transition: background-color 0.3s, border-color 0.3s; /* Плавные переходы для фонового цвета и границы */
+            /* Стили при наведении */
             &:hover {
-                background-color: $hover-blue; // Более темный синий цвет при наведении
-                border-color: $hover-blue; // Соответствующий цвет границы
+                background-color: $hover-blue; /* Более темный синий цвет при наведении */
+                border-color: $hover-blue; /* Соответствующий цвет границы */
             }
-            // Стили при нажатии
+            /* Стили при нажатии */
             &:active {
-                background-color: $active-blue; // Еще более темный синий цвет при нажатии
-                border-color: $active-blue; // Соответствующий цвет границы
+                background-color: $active-blue; /* Еще более темный синий цвет при нажатии */
+                border-color: $active-blue; /* Соответствующий цвет границы */
             }
+        }
+
+
+        p {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: justify; /* Выравнивает текст по ширине */
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            padding-left: 20px; /* Добавляем отступ слева */
+        }
+
+        li {
+            margin-bottom: 10px;
+            font-size: 24px;
+            line-height: 1.5;
+        }
+
+        li::before {
+            content: "—";
+            margin-right: 5px;
         }
     }
 }

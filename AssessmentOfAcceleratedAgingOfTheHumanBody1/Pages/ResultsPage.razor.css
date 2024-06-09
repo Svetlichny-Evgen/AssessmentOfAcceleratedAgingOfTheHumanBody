@@ -1,0 +1,9 @@
+.results-area {
+  margin: 25px 20% 5% 20%;
+}
+.results-area p {
+  font-size: 1.25rem;
+  line-height: 1.6;
+}
+
+/*# sourceMappingURL=ResultsPage.razor.css.map */

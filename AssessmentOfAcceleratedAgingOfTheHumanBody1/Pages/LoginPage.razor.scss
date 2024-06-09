@@ -1,0 +1,74 @@
+﻿/* Общие стили */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.login-container {
+    display: flex;
+    justify-content: center; /* Центрирует по горизонтали */
+    align-items: center; /* Центрирует по вертикали */
+    height: 75vh; /* Устанавливает высоту контейнера на 83% высоты экрана */
+    overflow: hidden; /* Убирает прокрутку */
+}
+
+.login-form {
+    background-color: white; /* Белый фон формы */
+    padding: 2rem; /* Внутренние отступы */
+    border-radius: 8px; /* Скругленные углы */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Тень для формы */
+    width: 100%;
+    max-width: 400px; /* Ограничивает максимальную ширину формы */
+    box-sizing: border-box;
+}
+
+.login-form div {
+    margin-bottom: 1.5rem; /* Увеличенные отступы между полями формы */
+}
+
+.login-form label {
+    display: block;
+    margin-bottom: 0.75rem; /* Увеличенные отступы под меткой */
+    font-weight: bold; /* Жирный шрифт для меток */
+    font-size: 1.25rem; /* Увеличенный размер шрифта для меток */
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"] {
+    width: 100%;
+    padding: 1rem; /* Увеличенные внутренние отступы */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1.25rem; /* Увеличенный размер шрифта */
+    box-sizing: border-box;
+    height: 3rem; /* Увеличенная высота полей ввода */
+}
+
+.login-form button {
+    width: 100%; /* Кнопка заполняет всю ширину формы */
+    padding: 1rem; /* Увеличенные внутренние отступы */
+    background-color: #007bff; /* Цвет кнопки */
+    color: white; /* Цвет текста на кнопке */
+    border: none;
+    border-radius: 4px;
+    font-size: 1.25rem; /* Увеличенный размер шрифта */
+    cursor: pointer;
+
+    &:hover {
+        background-color: #0056b3; /* Темнее цвет кнопки при наведении */
+    }
+}
+
+.login-failed-message {
+    color: red; /* Красный цвет текста для сообщения об ошибке */
+    margin-top: 1rem;
+    text-align: center;
+    font-size: 1.25rem; /* Увеличенный размер шрифта для сообщения об ошибке */
+}

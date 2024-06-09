@@ -1,0 +1,98 @@
+@charset "UTF-8";
+.user-info {
+  margin: 25px 20% 5% 20%;
+}
+.user-info h2 {
+  text-align: center;
+}
+.user-info p {
+  font-size: 1.2em;
+}
+.user-info p strong {
+  margin-right: 0.5rem;
+  font-size: 1.2em; /* Увеличиваем размер текста */
+}
+.user-info .password-section {
+  display: flex;
+  align-items: center;
+}
+.user-info .password-section .password-buttons {
+  margin-left: 1rem;
+}
+.user-info .password-section .password-buttons button {
+  margin-left: 0.5rem;
+}
+.user-info .password-section .password-buttons button:first-child {
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.user-info .password-section .password-buttons button:first-child:hover {
+  background-color: #0062cc;
+}
+.user-info .password-section .password-buttons button:nth-child(2) {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.user-info .password-section .password-buttons button:nth-child(2):hover {
+  background-color: #545b62;
+}
+.user-info form p {
+  display: flex; /* Используем flexbox для размещения label и input на одной строке */
+  align-items: center; /* Выравниваем элементы по вертикали */
+  justify-content: flex-start; /* Выравниваем элементы по левому краю */
+}
+.user-info form p label {
+  margin-right: 0.5rem;
+  margin-bottom: 5px;
+  text-align: right; /* Выравниваем метки по правому краю */
+  font-size: 1.2em; /* Увеличиваем размер текста */
+}
+.user-info form p input {
+  margin-left: 0.5rem;
+  margin-bottom: 5px;
+  align-self: stretch;
+  font-size: 1.2em; /* Увеличиваем размер текста */
+}
+.user-info form button {
+  margin-right: 0.5rem;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 1.2em; /* Увеличиваем размер текста */
+}
+.user-info form button:hover {
+  background-color: #0062cc;
+}
+.user-info form button:last-child {
+  background-color: #6c757d;
+}
+.user-info form button:last-child:hover {
+  background-color: #545b62;
+}
+
+.results-form {
+  margin: 25px 20% 5% 20%;
+}
+.results-form h2 {
+  font-size: 1.5em; /* Увеличиваем размер заголовка */
+}
+.results-form select, .results-form p {
+  font-size: 1.2em; /* Увеличиваем размер текста в select, table и p */
+}
+.results-form table {
+  font-size: 1.2em; /* Увеличиваем размер текста в таблице */
+  line-height: 1.5; /* Увеличиваем расстояние между строками */
+}
+
+/*# sourceMappingURL=UserPage.razor.css.map */

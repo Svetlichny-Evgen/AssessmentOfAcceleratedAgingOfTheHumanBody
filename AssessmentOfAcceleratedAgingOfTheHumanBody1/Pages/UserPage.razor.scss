@@ -1,0 +1,116 @@
+﻿.user-info {
+    margin: 25px 20% 5% 20%;
+    h2{
+        text-align: center;
+    }
+
+    p {
+        strong {
+            margin-right: 0.5rem;
+            font-size: 1.2em; /* Увеличиваем размер текста */
+        }
+
+        font-size: 1.2em;
+    }
+
+    .password-section {
+        display: flex;
+        align-items: center;
+
+        .password-buttons {
+            margin-left: 1rem;
+
+            button {
+                margin-left: 0.5rem;
+
+                &:first-child {
+                    background-color: #007BFF;
+                    color: white;
+                    border: none;
+                    padding: 0.5rem 1rem;
+                    cursor: pointer;
+                    border-radius: 4px;
+
+                    &:hover {
+                        background-color: darken(#007BFF, 10%);
+                    }
+                }
+
+                &:nth-child(2) {
+                    background-color: #6c757d;
+                    color: white;
+                    border: none;
+                    padding: 0.5rem 1rem;
+                    cursor: pointer;
+                    border-radius: 4px;
+
+                    &:hover {
+                        background-color: darken(#6c757d, 10%);
+                    }
+                }
+            }
+        }
+    }
+
+    form {
+        p {
+            display: flex; /* Используем flexbox для размещения label и input на одной строке */
+            align-items: center; /* Выравниваем элементы по вертикали */
+            justify-content: flex-start; /* Выравниваем элементы по левому краю */
+
+            label {
+                margin-right: 0.5rem;
+                margin-bottom: 5px;
+                text-align: right; /* Выравниваем метки по правому краю */
+                font-size: 1.2em; /* Увеличиваем размер текста */
+            }
+
+            input {
+                margin-left: 0.5rem;
+                margin-bottom: 5px;
+                align-self: stretch;
+                font-size: 1.2em; /* Увеличиваем размер текста */
+            }
+        }
+
+        button {
+            margin-right: 0.5rem;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 1.2em; /* Увеличиваем размер текста */
+
+            &:hover {
+                background-color: darken(#007BFF, 10%);
+            }
+
+            &:last-child {
+                background-color: #6c757d;
+
+                &:hover {
+                    background-color: darken(#6c757d, 10%);
+                }
+            }
+        }
+    }
+}
+
+.results-form {
+    margin: 25px 20% 5% 20%;
+
+    h2 {
+        font-size: 1.5em; /* Увеличиваем размер заголовка */
+    }
+
+    select, p {
+        font-size: 1.2em; /* Увеличиваем размер текста в select, table и p */
+    }
+
+    table {
+        font-size: 1.2em; /* Увеличиваем размер текста в таблице */
+        line-height: 1.5; /* Увеличиваем расстояние между строками */
+    }
+}

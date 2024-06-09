@@ -1,0 +1,36 @@
+@charset "UTF-8";
+.conteiner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 83vh;
+}
+.conteiner .registration-area {
+  margin: 25px 20% 5% 20%;
+}
+.conteiner .registration-area .form-group {
+  margin-bottom: 20px; /* Увеличьте отступ между элементами формы */
+}
+.conteiner .registration-area label {
+  font-size: 18px; /* Увеличьте размер шрифта меток */
+}
+.conteiner .registration-area .input-control {
+  padding: 10px; /* Увеличьте внутренние отступы элементов ввода */
+  font-size: 18px; /* Увеличьте размер шрифта элементов ввода */
+  width: 100%; /* Ширина элементов ввода на всю доступную ширину */
+  border-radius: 5px; /* Скругление углов элементов ввода */
+  border: 1px solid #ccc; /* Добавьте границу */
+}
+.conteiner .registration-area button {
+  padding: 10px 20px; /* Увеличьте внутренние отступы кнопки */
+  font-size: 18px; /* Увеличьте размер шрифта кнопки */
+  border-radius: 5px; /* Скругление углов кнопки */
+  border: none; /* Уберите границу */
+  background-color: #007bff; /* Цвет фона кнопки */
+  color: white; /* Цвет текста кнопки */
+}
+.conteiner .registration-area button:hover {
+  background-color: #0056b3; /* Измените цвет фона кнопки при наведении */
+}
+
+/*# sourceMappingURL=RegistrationPage.razor.css.map */

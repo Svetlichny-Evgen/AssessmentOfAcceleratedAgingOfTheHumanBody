@@ -1,3 +1,4 @@
+@charset "UTF-8";
 .header-area {
   width: 100%;
   background: #007BFF;
@@ -23,6 +24,26 @@
   font-size: 20pt;
   margin-left: 0;
   margin-right: 20px;
+  /* Стили для изменения цвета текста при наведении */
+}
+.header-area .header .header-items .header-item a {
+  text-decoration: none; /* Убирает подчеркивание */
+  color: inherit; /* Наследует цвет от родительского элемента */
+  transition: color 0.3s ease; /* Плавное изменение цвета текста */
+}
+.header-area .header .header-items .header-item button {
+  background: none; /* Убирает фон кнопки */
+  border: none; /* Убирает границу кнопки */
+  color: inherit; /* Наследует цвет текста */
+  cursor: pointer; /* Делает курсор указателем при наведении */
+  padding: 0; /* Убирает отступы внутри кнопки */
+  font-family: inherit; /* Наследует шрифт от родительского элемента */
+  font-size: inherit; /* Наследует размер шрифта от родительского элемента */
+  transition: color 0.1s ease; /* Плавное изменение цвета текста */
+}
+.header-area .header .header-items .header-item a:hover,
+.header-area .header .header-items .header-item button:hover {
+  color: gray; /* Делает текст серым при наведении */
 }
 
 /*# sourceMappingURL=IndexHeader.razor.css.map */

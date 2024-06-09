@@ -1,6 +1,18 @@
 ﻿.tabs {
     width: 100%;
 
+    .form-group {
+        margin-bottom: 10px;
+
+        label,
+        input,
+        small,
+        button {
+            font-size: 24px;
+        }
+    }
+
+
     button {
         background-color: #007BFF;
         color: #FFFFFF;

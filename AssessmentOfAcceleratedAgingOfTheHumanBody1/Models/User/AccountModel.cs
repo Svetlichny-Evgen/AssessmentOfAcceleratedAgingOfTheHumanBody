@@ -12,9 +12,9 @@ namespace AssessmentOfAcceleratedAgingOfTheHumanBody1.Models.User
         public DateTime Birthday { get; set; }
         [Required]
         public Sex Sex { get; set; }
-        [Required, EmailAddress]
+        [Required, EmailAddress(ErrorMessage = "Будьласка, введіть адресу електронної пошти.")]
         public string? EMail { get; set; }
-        [Required, MinLength(6)]
+        [Required(ErrorMessage = "Будьласка, введіть ваш пароль."), MinLength(6, ErrorMessage = "Пароль повинен бути не менше 6 символів.")]
         public string? Password { get; set; }
     }
 }

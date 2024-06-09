@@ -31,68 +31,65 @@
                         @if (!userAuthenticated)
                         {
                             <div class="form-group">
-                                <label>Sex:</label>
+                                <label>Стать:</label>
                                 <InputRadioGroup @bind-Value="selectedSex">
                                     <InputRadio Value="Sex.Male" id="male" />
-                                    <label for="male">Male</label>
+                                    <label for="male">Чоловік</label>
                                     <InputRadio Value="Sex.Female" id="female" />
-                                    <label for="female">Female</label>
+                                    <label for="female">Жінка</label>
                                 </InputRadioGroup>
                             </div>
                         }
 
                         <div class="form-group">
-                            <label for="BodyMassIndex">Body Mass Index:</label>
+                            <label for="BodyMassIndex">Індекс маси тіла:</label>
                             <InputNumber id="BodyMassIndex" @bind-Value="@Results.BodyMassIndex" class="form-control" />
                         </div>
 
                         <div class="form-group">
-                            <label for="BloodPressure">Blood Pressure:</label>
+                            <label for="BloodPressure">Артеріальний тиск:</label>
                             <InputText id="BloodPressure" @bind-Value="@Results.BloodPressure" class="form-control" pattern="\d{2,3}/\d{2,3}" title="Please enter in the format 'upper/lower'" oninput="this.value = this.value.replace(/[^0-9/]/g, '')" />
-                            <small id="BloodPressureHelp" class="form-text text-muted">Enter in the format 'upper/lower'.</small>
                         </div>
 
                         <div class="form-group">
-                            <label for="WaistCircumference">Waist Circumference:</label>
+                            <label for="WaistCircumference">Обхват талії:</label>
                             <InputNumber id="WaistCircumference" @bind-Value="@Results.WaistCircumference" class="form-control" />
                         </div>
 
                         <div class="form-group">
-                            <label for="HeartRate">Heart Rate:</label>
+                            <label for="HeartRate">Пульс:</label>
                             <InputNumber id="HeartRate" @bind-Value="@Results.HeartRate" class="form-control" />
                         </div>
 
                         <div class="form-group">
-                            <label for="SleepTime">Sleep Time:</label>
+                            <label for="SleepTime">Кількість годин сну:</label>
                             <InputNumber id="SleepTime" @bind-Value="@Results.SleepTime" class="form-control" />
                         </div>
 
                         <div class="form-group">
-                            <label for="CircadianRhythms">Circadian Rhythms:</label>
+                            <label for="CircadianRhythms">Циркадні ритми: (Дисинхроз є)</label>
                             <InputCheckbox id="CircadianRhythms" @bind-Value="@Results.CircadianRhythms" class="form-check" />
                         </div>
 
                         <div class="form-group">
-                            <label for="NumberOfHoursSitting">Number Of Hours Sitting:</label>
+                            <label for="NumberOfHoursSitting">Кількість годин сидячи:</label>
                             <InputNumber id="NumberOfHoursSitting" @bind-Value="@Results.NumberOfHoursSitting" class="form-control" />
                         </div>
 
                         <div class="form-group">
-                            <label for="NumberOfCigarettesSmokedPerDay">Number Of Cigarettes Smoked Per Day:</label>
+                            <label for="NumberOfCigarettesSmokedPerDay">Кількість сигарет скурених за добу:</label>
                             <InputNumber id="NumberOfCigarettesSmokedPerDay" @bind-Value="@Results.NumberOfCigarettesSmokedPerDay" class="form-control" />
                         </div>
 
                         <div class="form-group">
-                            <label for="AmountOfAlcoholDrunkPerDay">Amount Of Alcohol Drunk Per Day:</label>
+                            <label for="AmountOfAlcoholDrunkPerDay">Кількість алкоголю випитого за добу:</label>
                             <InputNumber id="AmountOfAlcoholDrunkPerDay" @bind-Value="@Results.AmountOfAlcoholDrunkPerDay" class="form-control" />
                         </div>
 
                         <div class="form-group">
-                            <label for="NumberOfMeals">Number Of Meals:</label>
+                            <label for="NumberOfMeals">Кількість прийомів їжі:</label>
                             <InputNumber id="NumberOfMeals" @bind-Value="@Results.NumberOfMeals" class="form-control" />
                         </div>
-
-                        <button type="submit" class="btn btn-primary">Submit</button>
                     </EditForm>
                 </div>
                 <button @onclick="NextTab">Далі</button>
@@ -110,11 +107,10 @@
                                            SelectedOptionChanged="@((string value) => HandleSelectedOptionChanged1(question, value))" />
                         <br />
                     }
-                    <p>Кількість відповідей "Так": @yesCount1</p>
                 </div>
                 @if (!allQuestionsAnswered1)
                 {
-                    <p style="color: red;">Вам необходимо ответить на все вопросы</p>
+                    <p style="color: red;">Вам необхідно відповісти на усі запитання</p>
                 }
                 <button @onclick="NextTab" disabled="@(!allQuestionsAnswered1)">Далі</button>
                 break;
@@ -134,7 +130,7 @@
                 </div>
                 @if (!allQuestionsAnswered2)
                 {
-                    <p style="color: red;">Вам необходимо ответить на все вопросы</p>
+                    <p style="color: red;">Вам необхідно відповісти на усі запитання</p>
                 }
                 <button @onclick="DataPreprocessor" disabled="@(!allQuestionsAnswered2)">Далі</button>
                 break;
@@ -509,7 +505,7 @@ else
         Results = new ResultsModel()
             {
                 Id = Guid.NewGuid(),
-                AccauntId = currentUser,  // Use currentUser as the account reference
+                AccauntId = currentUser,
                 CreatedAt = createdAt.ToString("dd-MM-yyyy"),
                 BodyMassIndex = Results.BodyMassIndex,
                 BloodPressure = Results.BloodPressure,
