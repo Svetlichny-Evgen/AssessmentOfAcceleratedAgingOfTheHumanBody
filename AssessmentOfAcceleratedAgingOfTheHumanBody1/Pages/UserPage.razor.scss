@@ -18,11 +18,7 @@
         align-items: center;
 
         .password-buttons {
-            margin-left: 1rem;
-
             button {
-                margin-left: 0.5rem;
-
                 &:first-child {
                     background-color: #007BFF;
                     color: white;
@@ -74,11 +70,11 @@
         }
 
         button {
-            margin-right: 0.5rem;
+            margin-right: 0;
             background-color: #007BFF;
             color: white;
             border: none;
-            padding: 0.5rem 1rem;
+            /*padding: 0.5rem 1rem;*/
             cursor: pointer;
             border-radius: 4px;
             font-size: 1.2em; /* Увеличиваем размер текста */

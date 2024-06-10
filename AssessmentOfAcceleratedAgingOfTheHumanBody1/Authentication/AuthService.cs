@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using System.Net.Http;
+using AssessmentOfAcceleratedAgingOfTheHumanBody1.Models.User;
 
 namespace AssessmentOfAcceleratedAgingOfTheHumanBody1.Authentication
 {
@@ -21,10 +22,10 @@ namespace AssessmentOfAcceleratedAgingOfTheHumanBody1.Authentication
 
         public async Task<LoginResult> LoginAsync(string email, string password)
         {
-            var account = _accountRepository.Select().FirstOrDefault(a => a.EMail == email && a.Password == password);
-            if (account == null)
+            var account = _accountRepository.Select().FirstOrDefault(a => a.EMail == email);
+            if (account == null || !PasswordHandler.VerifyPassword(password, account.Password))
             {
-                return new LoginResult { Success = false };
+                return new LoginResult { Success = false, ErrorMessage = "Неправильный email или пароль" };
             }
 
             var userInfo = new UserInfo
@@ -60,6 +61,7 @@ namespace AssessmentOfAcceleratedAgingOfTheHumanBody1.Authentication
     public class LoginResult
     {
         public bool Success { get; set; }
+        public string ErrorMessage { get; set; }
         public UserInfo UserInfo { get; set; }
     }
 }

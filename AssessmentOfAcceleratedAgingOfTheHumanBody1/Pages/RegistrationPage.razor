@@ -58,6 +58,9 @@
 
     private async Task HandleRegister()
     {
+        string encodedPassword = PasswordHandler.EncodePassword(accountModel.Password);
+        accountModel.Password = encodedPassword;
+
         var response = await Http.PostAsJsonAsync("/account/register", accountModel);
         if (response.IsSuccessStatusCode)
         {

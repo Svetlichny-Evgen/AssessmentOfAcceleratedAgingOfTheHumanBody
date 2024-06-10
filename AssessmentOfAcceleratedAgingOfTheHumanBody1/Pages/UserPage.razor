@@ -45,9 +45,7 @@
         else
         {
             <div class="password-section">
-                <p><strong>Пароль:</strong> @passwordDisplay</p>
                 <div class="password-buttons">
-                    <button @onclick="TogglePasswordVisibility">@buttonText</button>
                     <button @onclick="EditPassword">Змінити пароль</button>
                 </div>
             </div>
@@ -115,8 +113,6 @@ else
     private bool isEditingPassword = false;
     private string newPassword;
     private string confirmPassword;
-    private string passwordDisplay => isPasswordVisible ? currentUser.Password : new string('*', currentUser.Password.Length);
-    private string buttonText => isPasswordVisible ? "Приховати пароль" : "Показати пароль";
     private List<ResultsModel> filteredResults = new List<ResultsModel>();
     private List<ResultsModel> testResults = new List<ResultsModel>();
 
@@ -169,11 +165,13 @@ else
             return;
         }
 
-        currentUser.Password = newPassword;
+        currentUser.Password = PasswordHandler.EncodePassword(newPassword);
         AccountRepository.Update(currentUser);
         isEditingPassword = false;
         newPassword = string.Empty;
         confirmPassword = string.Empty;
+
+        await js.InvokeVoidAsync("alert", "Пароль було змінено!");
     }
 
     private string DetermineQualityOfLife(int res)
